@@ -17,7 +17,13 @@ pip3 install pipenv
 pipenv install
 ```
 
+
 ## Architecture
 
 ## Contribute
 
+
+## Run Tests
+```bash
+python -m pytest
+```
