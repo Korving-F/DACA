@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+from curses.ascii import SO
 import logging
 import subprocess
 import shutil
-import daca
 
+from daca.daca import *
 
 # Set module-level logging
 logger = logging.getLogger(__name__)
@@ -41,3 +42,5 @@ def check_vagrant_version():
 if __name__ == '__main__':
     set_logging() # pass args.debug to it later
     test()
+    x = Something()
+    print(x.x)

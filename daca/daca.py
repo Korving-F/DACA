@@ -1,3 +1,3 @@
-class Test:
+class Something:
     def __init__(self):
-        return self
+        self.x = 'test'
