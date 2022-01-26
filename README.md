@@ -10,7 +10,12 @@
 ## Requirements
 
 ## Installation
-Link to project wiki
+This project uses pipenv for dependency management.
+Installation instructions can be found [here](https://github.com/pypa/pipenv#installation).
+```bash
+pip3 install pipenv
+pipenv install
+```
 
 ## Architecture
 
