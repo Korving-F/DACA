@@ -1,6 +1,7 @@
 [run]
 branch = True
 source = daca
+omit = tests/*
 
 [report]
 exclude_lines =
