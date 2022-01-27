@@ -34,7 +34,7 @@ This directory contains DNS tunnel scenario description files.
 
 
 ## Overview
-# <a href="https://github.com/Korving-F/iodine-log-analysis"><img alt="Iodine DNS Tunnel" src="tunnel_init.png" height="200"></a>
+# <a href="https://github.com/Korving-F/iodine-log-analysis"><img alt="Iodine DNS Tunnel" src="tunnel_init.png" height="400"></a>
 
 ## References
 * https://github.com/Korving-F/iodine-log-analysis
