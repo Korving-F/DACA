@@ -4,6 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+python-vagrant = "*"
+docker = "*"
+pyyaml = "*"
+jinja2 = "*"
+click = "*"
 
 [dev-packages]
 pytest = "*"
