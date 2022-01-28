@@ -6,7 +6,9 @@ import pathlib
 # Custom Modules
 import scenarios
 import templates
-from .vagrantcontroller import VagrantController
+from .vagrantcontroller   import VagrantController
+from .terraformcontroller import TerraformController
+from .configurationparser import ConfigurationParser
 
 class ScenarioRunner:
     def __init__(self, scenario_id: str, scenario_path: str = None) -> None:

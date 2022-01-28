@@ -1,7 +1,7 @@
 from vagrant import Vagrant
 
 class VagrantController:
-    def __init__(self, scenario) -> None:
+    def __init__(self) -> None:
         self._vagrant = Vagrant()
         pass
 
@@ -9,5 +9,12 @@ class VagrantController:
         pass
 
     @property
-    def scenario(self, scenario):
-        self._scenario = scenario
+    def vagrant(self):
+        return self._vagrant
+
+    @vagrant.setter
+    def vagrant(self, vagrant):
+        self._vagrant = vagrant
+
+    def something(self):
+        self._vagrant.box_add()
