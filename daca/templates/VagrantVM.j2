@@ -1,11 +1,16 @@
-config.vm.define "{{ hostname }}" do |{{ hostname }}|
+config.vm.define {{ hostname }} do |{{ hostname }}|
+
+    # Set the box-type and version (default is latest)
+    {{ hostname }}.vm.box = {{ image }}
+    {{ hostname }}.vm.box_version = {{ image_version|default('">= 0"') }}
+    
     # Set the hostname
     {{ hostname }}.vm.hostname = "{{ hostname }}"
 
-    # Configure bridged adapter, dhcp, keep dhcp assigned default route 
-    {{ hostname }}.vm.network "public_network", bridge: ["wlp3s0"],
-        use_dhcp_assigned_default_route: true
+    # Setup networking
+    #config.vm.network # TODO
 
+    # Provision VM method
     {{ hostname }}.vm.provision "ansible_local" do |a|
         a.install = true,
         a.install_mode = "default",
@@ -13,4 +18,35 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
         a.become_user = "root",
         a.become = true
     end
+
+    # TODO: a series of variables that might be encountered in components.
+    # https://www.vagrantup.com/docs/vagrantfile/machine_settings
+    #config.vm.allow_fstab_modification (boolean)
+    #config.vm.allow_hosts_modification (boolean)
+    #config.vm.base_mac (string)
+    #config.vm.base_address (string)
+    #config.vm.boot_timeout (integer)
+    #config.vm.box_check_update (boolean)
+    #config.vm.box_download_checksum (string)
+    #config.vm.box_download_checksum_type (string)
+    #config.vm.box_download_client_cert (string)
+    #config.vm.box_download_ca_cert (string)
+    #config.vm.box_download_ca_path (string)
+    #config.vm.box_download_options (map)
+    #config.vm.box_download_insecure (boolean)
+    #config.vm.box_download_location_trusted (boolean)
+    #config.vm.box_url (string, array of strings)
+    #config.vm.communicator (string)
+    #config.vm.disk
+    #config.vm.graceful_halt_timeout (integer)
+    #config.vm.guest (string, symbol)
+    #config.vm.ignore_box_vagrantfile (boolean)
+    #config.vm.post_up_message (string)
+    #config.vm.provider
+    #config.vm.provision
+    #config.vm.synced_folder
+    #config.vm.usable_port_range (range)
 end
+
+
+

@@ -3,7 +3,8 @@
 import logging
 import subprocess
 import shutil
-import docker
+#import docker
+import yaml
 from pathlib import Path
 
 # Local modules
@@ -52,13 +53,14 @@ if __name__ == '__main__':
 
     # List available scenarios
     logger.debug("Listing out-of-the-box scenarios")
+    # click_path = args.path
     scenarios = Path(r'scenarios').glob('*/*yaml*')
     scenario_list = [i for i in scenarios if i.is_file()]
     scenario_list.sort()
     for scenario in scenario_list:
         print(f"[{scenario_list.index(scenario)}]\t{scenario.name}")
-        
 
+    logger.debug("Listing components of scenario")
 
 
     # Click - determine scenario
@@ -71,4 +73,4 @@ if __name__ == '__main__':
     #for server in servers:
     #x = ScenarioRunner("asd")
     #x.run()
-    logger.info("test log")
+    #logger.info("test log")

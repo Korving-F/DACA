@@ -1,0 +1,10 @@
+name: Bind9
+description: |
+  Installation of Bind9 DNS server.
+image: ubuntu/focal64
+setup: |
+  apt install bind9
+run: |
+  systemct status
+artifacts_to_collect:
+  - /var/log/bind9.log
