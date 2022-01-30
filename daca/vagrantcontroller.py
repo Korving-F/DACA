@@ -1,17 +1,24 @@
 '''
-Wrapper module to deal with 
+Wrapper module to deal with project specific Vagrant interactions.
+See also:
+* https://github.com/todddeluca/python-vagrant
+* https://pypi.org/project/python-vagrant/
 '''
-
-import subprocess
+# System modules
 import re
 import os
-
 from vagrant import Vagrant
 
-class VagrantController:
-    def __init__(self, vagrant_home: str) -> None:
-        self._vagrant = Vagrant()
+# Local modules
 
+# Setup logging
+import logging
+logger = logging.getLogger('daca')
+
+class VagrantController(Vagrant):
+    def __init__(self, vagrant_home: str, **kwargs) -> None:
+        logger.debug("Initiating VagrantController")
+        self.vagrant = Vagrant()
 
 
     ### PROPERTIES ###
@@ -29,7 +36,10 @@ class VagrantController:
 
     @vagrant_home.setter
     def vagrant_home(self, vagrant_home):
-        # Setting new HOME directory where boxes are stored.
+        '''
+        Setting new HOME directory where boxes are stored.
+        Needed to 
+        '''
         self._vagrant_home = vagrant_home
         self._vagrant.env = self.set_env_variable('VAGRANT_HOME', vagrant_home)
 
@@ -41,9 +51,6 @@ class VagrantController:
 
     def something(self):
         self._vagrant.box_add()
-
-    def check_vagrant_version(self):
-        pass
 
     def validate(self):
         '''
