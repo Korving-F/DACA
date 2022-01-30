@@ -1,0 +1,9 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure({{ vagrant_version|default('"2"') }}) do |config|
+
+    {{ vms }}
+
+    
+end

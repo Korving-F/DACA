@@ -4,7 +4,7 @@ import subprocess
 import shutil
 import docker
 
-# Custom Modules
+# Local Modules
 from daca import *
 from daca.vagrantcontroller import VagrantController
 from daca.scenariorunner import ScenarioRunner
@@ -38,14 +38,17 @@ def check_docker_version():
 
 
 if __name__ == '__main__':
+    
+
+
     # Click - determine debug level
     set_logging()
 
     # Click - determine scenario
     #print(dns_tunnel.tralala())
     # Click - Interactive should be a flag?
-    chosen_scenario = "dns_tunnel"
-    controller = VagrantController(chosen_scenario)
+    #chosen_scenario = "dns_tunnel"
+    #controller = VagrantController(chosen_scenario)
     
 
     #for server in servers:
