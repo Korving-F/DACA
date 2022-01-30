@@ -5,7 +5,6 @@ import pathlib
 
 # Custom Modules
 import scenarios
-import templates
 from .vagrantcontroller   import VagrantController
 from .terraformcontroller import TerraformController
 from .configurationparser import ConfigurationParser

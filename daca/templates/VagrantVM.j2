@@ -1,0 +1,16 @@
+config.vm.define "{{ hostname }}" do |{{ hostname }}|
+    # Set the hostname
+    {{ hostname }}.vm.hostname = "{{ hostname }}"
+
+    # Configure bridged adapter, dhcp, keep dhcp assigned default route 
+    {{ hostname }}.vm.network "public_network", bridge: ["wlp3s0"],
+        use_dhcp_assigned_default_route: true
+
+    {{ hostname }}.vm.provision "ansible_local" do |a|
+        a.install = true,
+        a.install_mode = "default",
+        a.playbook = "{{ provisioning_playbook }}",
+        a.become_user = "root",
+        a.become = true
+    end
+end
