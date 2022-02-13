@@ -9,5 +9,5 @@ run: |
 artifacts_to_collect:
   - pcap
   - mordor
-  - log_files:
+  - files:
     - /var/log/bind9.log
