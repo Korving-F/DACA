@@ -7,4 +7,7 @@ setup: |
 run: |
   systemct status
 artifacts_to_collect:
-  - /var/log/bind9.log
+  - pcap
+  - mordor
+  - log_files:
+    - /var/log/bind9.log

@@ -61,7 +61,8 @@ if __name__ == '__main__':
         print(f"[{scenario_list.index(scenario)}]\t{scenario.name}")
 
     logger.debug("Listing components of scenario")
-
+    for scenario in scenario_list:
+        pass
 
     # Click - determine scenario
     #print(dns_tunnel.tralala())

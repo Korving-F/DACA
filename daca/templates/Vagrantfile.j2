@@ -3,6 +3,8 @@
 
 Vagrant.configure({{ vagrant_version|default('"2"') }}) do |config|
 
+    {{ collection_vms }}
+
     {{ vms }}
 
 end
