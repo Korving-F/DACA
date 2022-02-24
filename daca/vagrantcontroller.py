@@ -4,14 +4,14 @@ See also:
 * https://github.com/todddeluca/python-vagrant
 * https://pypi.org/project/python-vagrant/
 '''
-# System modules
+### System modules ###
 import re
 import os
 from vagrant import Vagrant
 
-# Local modules
+### Local modules ###
 
-# Setup logging
+### Setup logging ###
 import logging
 logger = logging.getLogger('daca')
 
@@ -61,3 +61,9 @@ class VagrantController(Vagrant):
         if m is None:
             raise Exception(f"Failed to parse vagrant validate output. output={output}")
         return True
+
+    def validate_env(self):
+        '''
+        Validates the running environment.
+        '''
+        pass
