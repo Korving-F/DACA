@@ -59,6 +59,7 @@ description: |
   "This Scenario sets up a vulnerable web application and runs multiple NMAP scans against it."
 provisioner: vagrant
 use_default_template: yes
+
 components:
   - name: main_server
     image: ubuntu/focal64
@@ -66,22 +67,30 @@ components:
       echo "[+] Installing dependencies"
       sudo apt-get update
       sudo apt install -y unzip nmap
+
       echo "[+] Installing Vulnerable Web App Gruyère"
       wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip
       unzip /tmp/gruyere-code.zip -d /opt/gruyere-code
+
       echo "[+] Setting up logfile for Vulnerable Web App"
       sed -i 's/print >>sys.stderr, message/open("\/tmp\/gruyere.log","a+").writelines(list(message))/g' /opt/gruyere-code/gruyere.py
+
+    # Notice the Jinja2 template variable
     run: |
       echo "[+] Run webserver"
       python2.7 /opt/gruyere-code/gruyere.py &
-      {{ variables }}
+      {{ variables.nmap }}
+
     artifacts_to_collect:
-      - pcap
+      - pcap:  ["place BPF filter here"]
       - files: ["/tmp/gruyere.log"]
+
+# These entries are substituted for the Jinja2 tempate variable in the run section.
 variables:
-  - nmap -sV --script=http-enum 127.0.0.1:8008
-  - nmap -p8008 --script http-waf-detect 127.0.0.1
-  - nmap -p8008 --script http-wordpress-users 127.0.0.1
+  nmap:
+    - nmap -sV --script=http-enum 127.0.0.1:8008
+    - nmap -p8008 --script http-waf-detect 127.0.0.1
+    - nmap -p8008 --script http-wordpress-users 127.0.0.1
 ```
 
 ## Architecture

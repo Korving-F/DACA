@@ -38,7 +38,7 @@ class VagrantController(Vagrant):
     def vagrant_home(self, vagrant_home):
         '''
         Setting new HOME directory where boxes are stored.
-        Needed to 
+        Can be used to store VM disks to dedicated disk or partition.
         '''
         self._vagrant_home = vagrant_home
         self._vagrant.env = self.set_env_variable('VAGRANT_HOME', vagrant_home)
