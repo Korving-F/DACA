@@ -2,12 +2,24 @@ name: Bind9
 description: |
   Installation of Bind9 DNS server.
 image: ubuntu/focal64
-setup: |
-  apt install bind9
-run: |
-  systemct status
+setup:
+  type: shell
+  val: apt install bind9
+run:
+  type: shell
+  val: systemct status
 artifacts_to_collect:
-  - pcap
-  - mordor
-  - files:
-    - /var/log/bind9.log
+  - type: pcap
+    vals: ["place BPF filter here"]
+  - type: files
+    vals: ["/var/log/bind9.log"]
+  - type: mordor
+    vals: ["/var/log/bind9.log"]
+  - type: elasticsearch
+    vals: ["hostname:port"]
+variables:
+  - name: nmap
+    vals:
+      - nmap -sV --script=http-enum 127.0.0.1:8008
+      - nmap -p8008 --script http-waf-detect 127.0.0.1
+      - nmap -p8008 --script http-wordpress-users 127.0.0.1

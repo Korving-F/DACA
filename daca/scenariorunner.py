@@ -9,6 +9,7 @@ import click
 from .vagrantcontroller   import VagrantController
 from .terraformcontroller import TerraformController
 from .dockercontroller    import DockerController
+from .configurationparser import ConfigurationParser
 from .scenario            import Scenario
 
 ### Setup logging ###
@@ -22,6 +23,7 @@ class ScenarioRunner:
                 ) -> None:
         self.scenario_path = scenario_path
         self.available_scenarios = self.scenario_path
+        #controller = VagrantController("asd")
 
 
     ### STATIC METHODS ###
@@ -46,11 +48,9 @@ class ScenarioRunner:
                 continue
             
             scenario = Scenario(scenario_file)
-            if scenario.is_valid():
-                scenario_list.append(scenario)
-                pass
+            scenario_list.append(scenario)
 
-            scenario_list.sort()
+        scenario_list.sort()
 
         self._available_scenarios = scenario_list
 
@@ -88,10 +88,23 @@ class ScenarioRunner:
             print(f"\t[{self.available_scenarios.index(scenario)}] {scenario}")
 
 
+    def build(self):
+        """
+        Build / deploy defined infrastructure.
+        """
+        pass
+
+
     def setup(self):
+        """
+        
+        """
         pass
 
 
     def run(self):
+        """
+        
+        """
         pass
 
