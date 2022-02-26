@@ -7,8 +7,6 @@ from pathlib import Path
 
 ### Local modules ###
 from daca import *
-from daca.configurationparser import ConfigurationParser
-from daca.vagrantcontroller import VagrantController
 from daca.scenariorunner import ScenarioRunner
 
 
@@ -76,19 +74,23 @@ def build(path):
 @main.command()
 @click.option('--path', help='Path to scenario definition file or directory.', type=str)
 @click.option('--datapath', help='Path where extracted data samples should be stored.', type=str)
-def run(path, datapath):
+@click.option('--interactive', is_flag=True, help='Run the scenario interactively')
+def run(path, datapath, interactive):
     """
     Run the selected scenario.
     """
     logger.debug(f"Running scenario with path: {path}")
     click.echo("[+] Starting execution.")
+    if interactive == True:
+        print("Run the scenario interactively.")
 
 
 @main.command()
 @click.option('--path', default='scenarios', help='Path to scenario definition file or directory.', type=str)
+@click.option('--id', help='ID of the scenario that needs to be displayed.', type=int)
 @click.option('--summarize', is_flag=True, help='Summarize scenario runthrough (e.g. # of cycles / approximate running time)')
 @click.option('--list', is_flag=True, help='List all available scenarios')
-def info(path, summarize, list):
+def info(path, id, summarize, list):
     """
     Display information and metadata on available scenario(s).  
     """
@@ -97,25 +99,11 @@ def info(path, summarize, list):
         logger.debug(f"Listing avaiable scenarions {Path(path).absolute()}")
         runner = ScenarioRunner(Path(path).absolute())
         runner.list_scenarios()
+    
+    print(f"Summarize: {summarize}")
+    print(f"id: {id}")
 
 
 if __name__ == '__main__':
     print(BANNER)
     main()
-
-
-    # daca.py --debug --scenario /path/to/scenario.yaml
-    # daca.py --list-scenarios
-    # daca.py --summarize --scenario-id 1
-
-
-    # Click - determine scenario
-    #print(dns_tunnel.tralala())
-    # Click - Interactive should be a flag?
-    #chosen_scenario = "dns_tunnel"
-    controller = VagrantController("asd")
-
-    #for server in servers:
-    #x = ScenarioRunner("asd")
-    #x.run()
-    #logger.info("test log")

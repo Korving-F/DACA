@@ -2,27 +2,29 @@ name: "DNS Tunnel Scenario"
 description: |
   "This Scenario runs through multiple DNS tunneling "
 provisioner: vagrant
-use_default_template: yes
+use_default_templates: True
 components:
   - name: dns_server
-    image: {{ dns_server.image }}
-    setup: {{ dns_server.setup }}
-    run:   {{ dns_server.run }}
-    artifacts_to_collect: {{ dns_server.artifacts_to_collect }}
+    image: "{{ dns_server.image }}"
+    setup: "{{ dns_server.setup }}"
+    run:   "{{ dns_server.run }}"
+    artifacts_to_collect: "{{ dns_server.artifacts_to_collect }}"
 
   - name: dns_attack_server
-    image: {{ dns_tunnel.dns_attack_server.image }}
-    setup: {{ dns_tunnel.attack_server.setup }}
-    run:   {{ dns_tunnel.attack_server.run }}
-    artifacts_to_collect: {{ dns_tunnel.attack_server.artifacts_to_collect }}
+    image: "{{ dns_tunnel.dns_attack_server.image }}"
+    setup: "{{ dns_tunnel.attack_server.setup }}"
+    run:   "{{ dns_tunnel.attack_server.run }}"
+    artifacts_to_collect: "{{ dns_tunnel.attack_server.artifacts_to_collect }}"
 
   - name: dns_attack_client
     image: ubuntu/focal64
-
-    setup: {{ dns_tunnel.dns_attack_client.setup }}
-    run: {{ dns_tunnel.dns_attack_client.run }}
-    variables: {{ dns_tunnel.dns_attack_client.variables }}
-    artifacts_to_collect: {{ dns_tunnel.dns_attack_client.artifacts_to_collect }}
+    setup: "{{ dns_tunnel.dns_attack_client.setup }}"
+    run: "{{ dns_tunnel.dns_attack_client.run }}"
+    artifacts_to_collect: "{{ dns_tunnel.dns_attack_client.artifacts_to_collect }}"
     depends_on:
       - dns_attack_server
       - dns_server
+
+variables:
+  - name: dns_tunnel
+    vals: "{{ dns_tunnel.dns_attack_client.variables }}"

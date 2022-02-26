@@ -5,10 +5,12 @@ which can be created.
 
 ### System modules ###
 from pathlib import Path
+from cerberus import Validator
+import yaml
 
 ### Local modules ###
-from .configurationparser import ConfigurationParser
 from .scenario_schema import scenario_schema
+
 
 ### Setup logging ###
 import logging
@@ -21,11 +23,6 @@ class Scenario:
                 ) -> None:
         self.scenario_path         = scenario_path
         self.schema                = scenario_schema
-        print(self.schema)
-        self._configuration_parser = ConfigurationParser(scenario_path)
-        self.name                  = self._configuration_parser.read_property('name')
-        self.description           = self._configuration_parser.read_property('name')
-
         self.validate_scenario()
     
     def __repr__(self):
@@ -35,6 +32,7 @@ class Scenario:
         return self.scenario_path < other.scenario_path
 
     ### Static methods ###
+
 
     ### Properties ###
     @property
@@ -79,6 +77,24 @@ class Scenario:
 
 
     ### Helper methods ###
+    def load_scenario(self):
+        with open(self.scenario_path, 'r') as sp:
+            try:
+                return yaml.safe_load(sp)
+            except yaml.YAMLError as exception:
+                logger.debug(f"YAML file is not valid: {self.scenario_path}")
+                raise exception
+
+    def validate_schema(self):
+        v =  Validator(self.schema)
+        if v.validate(self.scenario_path):
+            return True
+        else:
+            logger.debug(f'The scenario failed validation: {v.errors}')
+            print(f'The scenario failed validation: {v.errors}')
+            return False
+
+
     def validate_scenario(self) -> None:
         """
         Check for scenario schema validity, presence of all required fields, components etc.
@@ -95,3 +111,17 @@ class Scenario:
 
         logger.debug("Scenario invalid due to missing name parameter.")
         self._is_valid = True
+
+
+    def read_property(self, property):
+        """
+        Reads in a property.
+        """
+        #return yaml.load(property)
+        pass
+
+    def summarize(self):
+        """
+        Summarizes itself: number of variations, # of components, variables etc.
+        """
+        pass

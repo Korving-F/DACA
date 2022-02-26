@@ -9,6 +9,7 @@ docker = "*"
 pyyaml = "*"
 jinja2 = "*"
 click = "*"
+cerberus = "*"
 
 [dev-packages]
 pytest = "*"
