@@ -72,6 +72,19 @@ def build(path):
 
 
 @main.command()
+@click.option('--path', '-p', required=True, help='''Path to scenario definition file. 
+                                                     Give "*" to delete all objects DACA can find.
+                                                     Prompts for confirmation.''', type=str)
+def destroy(path):
+    """
+    Cleans-up all scenario related objects like VMs/Docker images.
+    """
+    logger.debug(f"Destroying scenario with path: {path}")
+    click.echo("Destroying")
+    #TODO Implement cleanup
+
+
+@main.command()
 @click.option('--path', help='Path to scenario definition file or directory.', type=str)
 @click.option('--datapath', help='Path where extracted data samples should be stored.', type=str)
 @click.option('--interactive', is_flag=True, help='Run the scenario interactively')
@@ -103,6 +116,11 @@ def info(path, id, summarize, list):
     print(f"Summarize: {summarize}")
     print(f"id: {id}")
 
+
+# Function to force print help section
+#def print_help():
+#    ctx = click.get_current_context()
+#    click.echo(ctx.get_help())
 
 if __name__ == '__main__':
     print(BANNER)

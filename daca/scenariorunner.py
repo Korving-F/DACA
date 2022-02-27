@@ -46,12 +46,12 @@ class ScenarioRunner:
             scenario_file = Path(f"{d}/{d.name}.yaml")
             if not scenario_file.is_file():
                 continue
-            
+
+            logger.debug(f"scenario_file: {scenario_file}")
             scenario = Scenario(scenario_file)
             scenario_list.append(scenario)
 
         scenario_list.sort()
-
         self._available_scenarios = scenario_list
 
     @property
@@ -61,15 +61,14 @@ class ScenarioRunner:
     @scenario_path.setter
     def scenario_path(self, scenario_path):
         self._scenario_path = scenario_path
-        self.scenario = scenario_path
 
     @property
     def scenario(self):
         return self._scenario
     
     @scenario.setter
-    def scenario(self, scenario_path):
-        self._scenario = Scenario(scenario_path)
+    def scenario(self, scenario: Scenario):
+        self._scenario = scenario
 
 
     ### HELPER FUNCTIONS ###

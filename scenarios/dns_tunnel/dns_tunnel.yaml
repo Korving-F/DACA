@@ -3,8 +3,10 @@ description: |
   "This Scenario runs through multiple DNS tunneling "
 provisioner: vagrant
 use_default_templates: True
+
 components:
   - name: dns_server
+    description: "{{ dns_server.description }}"
     image: "{{ dns_server.image }}"
     setup: "{{ dns_server.setup }}"
     run:   "{{ dns_server.run }}"
@@ -27,4 +29,4 @@ components:
 
 variables:
   - name: dns_tunnel
-    vals: "{{ dns_tunnel.dns_attack_client.variables }}"
+    val: "{{ dns_tunnel.dns_attack_client.variables }}"

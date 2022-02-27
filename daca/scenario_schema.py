@@ -83,6 +83,13 @@ scenario_schema = {
                             }
                         }
                     }
+                },
+                'depends_on': {
+                    'required': False,
+                    'type':'list',
+                    'schema': {
+                        'type': 'string'
+                    }
                 }
             }
         }
