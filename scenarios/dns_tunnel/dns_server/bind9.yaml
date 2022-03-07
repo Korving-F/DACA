@@ -10,16 +10,16 @@ run:
   val: systemct status
 artifacts_to_collect:
   - type: pcap
-    vals: ["place BPF filter here"]
+    val: ["place BPF filter here"]
   - type: files
-    vals: ["/var/log/bind9.log"]
+    val: ["/var/log/bind9.log"]
   - type: mordor
-    vals: ["/var/log/bind9.log"]
-  - type: elasticsearch
-    vals: ["hostname:port"]
+    val: ["/var/log/bind9.log"]
+  - type: elastic
+    val: ["hostname:port"]
 variables:
   - name: nmap
-    vals:
+    val:
       - nmap -sV --script=http-enum 127.0.0.1:8008
       - nmap -p8008 --script http-waf-detect 127.0.0.1
       - nmap -p8008 --script http-wordpress-users 127.0.0.1

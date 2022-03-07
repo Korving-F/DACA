@@ -13,12 +13,14 @@ components:
     artifacts_to_collect: "{{ dns_server.artifacts_to_collect }}"
 
   - name: dns_attack_server
+    description: "{{ dns_tunnel.dns_attack_server.description }}"
     image: "{{ dns_tunnel.dns_attack_server.image }}"
-    setup: "{{ dns_tunnel.attack_server.setup }}"
-    run:   "{{ dns_tunnel.attack_server.run }}"
-    artifacts_to_collect: "{{ dns_tunnel.attack_server.artifacts_to_collect }}"
+    setup: "{{ dns_tunnel.dns_attack_server.setup }}"
+    run:   "{{ dns_tunnel.dns_attack_server.run }}"
+    artifacts_to_collect: "{{ dns_tunnel.dns_attack_server.artifacts_to_collect }}"
 
   - name: dns_attack_client
+    description: "{{ dns_tunnel.dns_attack_client.description }}"
     image: ubuntu/focal64
     setup: "{{ dns_tunnel.dns_attack_client.setup }}"
     run: "{{ dns_tunnel.dns_attack_client.run }}"
@@ -28,5 +30,5 @@ components:
       - dns_server
 
 variables:
-  - name: dns_tunnel
+  - name: dns_attack_client
     val: "{{ dns_tunnel.dns_attack_client.variables }}"

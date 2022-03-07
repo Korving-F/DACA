@@ -23,7 +23,7 @@ BANNER='''
    \:\/:/  /        /:/  /     \:\  \           /:/  /     
     \::/__/        /:/  /       \:\__\         /:/  /      
      ~~            \/__/         \/__/         \/__/       
-     v1.0 (https://github.com/Korving-F/DACA)                                                                           
+     v0.1 (https://github.com/Korving-F/DACA)                                                                           
 '''
 
 
@@ -93,16 +93,17 @@ def run(path, datapath, interactive):
     Run the selected scenario.
     """
     logger.debug(f"Running scenario with path: {path}")
+    logger.debug(f"Storing data at path: {datapath}")
     click.echo("[+] Starting execution.")
     if interactive == True:
         print("Run the scenario interactively.")
 
 
 @main.command()
-@click.option('--path', default='scenarios', help='Path to scenario definition file or directory.', type=str)
-@click.option('--id', help='ID of the scenario that needs to be displayed.', type=int)
-@click.option('--summarize', is_flag=True, help='Summarize scenario runthrough (e.g. # of cycles / approximate running time)')
-@click.option('--list', is_flag=True, help='List all available scenarios')
+@click.option('--path', '-p', default='scenarios', help='Path to scenario definition file or directory.', type=str)
+@click.option('--id', '-i', help='ID of the scenario that needs to be displayed.', type=int)
+@click.option('--summarize', '-s', is_flag=True, help='Summarize scenario runthrough (e.g. # of cycles / approximate running time)')
+@click.option('--list', '-l', is_flag=True, help='List all available scenarios')
 def info(path, id, summarize, list):
     """
     Display information and metadata on available scenario(s).  
@@ -113,8 +114,19 @@ def info(path, id, summarize, list):
         runner = ScenarioRunner(Path(path).absolute())
         runner.list_scenarios()
     
-    print(f"Summarize: {summarize}")
-    print(f"id: {id}")
+    if summarize == True:
+        logger.debug(f"Summarizing scenario: {Path(path).absolute()}")
+        runner = ScenarioRunner(Path(path).absolute())
+        if id != None:
+            runner.set_scenario_by_id(id)
+
+        if runner.scenario is None:
+            click.echo("[!] No scenario is set to summarize. Please point to a file or use the '--id' flag.")
+            exit(1)
+        
+        runner.summarize()
+
+    #print(f"id: {id}")
 
 
 # Function to force print help section

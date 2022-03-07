@@ -1,0 +1,37 @@
+dns_attack_server:
+    name: iodine_server
+    image: ubuntu/focal64
+    description: |
+      This sets up the IODINE server.
+    setup:
+        type: shell
+        val: apt-get install something
+    run:
+        type: shell
+        val: python3 web_server.py
+
+dns_attack_client:
+    name: iodine_client
+    image: ubuntu/focal64
+    description: |
+      This sets up the IODINE client.
+    setup:
+      type: shell
+      val: |
+        echo "woop"
+    run:
+        type: shell
+        val: |
+          echo "{{ variables.a }}"
+          echo "{{ variables.b }}"
+
+    #setup:
+    #    type: ansible
+    #    val: 'playbook.yaml'
+    #run:
+    #    type: script
+    #    val: 'run.py'
+
+    variables:
+        - a: ["woop", "w00p"]
+        - b: ["f00", "b4r"]
