@@ -66,6 +66,7 @@ scenario_schema = {
                 },
                 'artifacts_to_collect': {
                     'required': False,
+                    'nullable': True,
                     'type': 'list',
                     'schema': {
                         'type': 'dict',
@@ -109,7 +110,7 @@ scenario_schema = {
                     'type': 'list',
                     'required': True,
                     'schema': {
-                        'type': 'string'
+                        'type': 'dict'
                     }
                 }
             }
