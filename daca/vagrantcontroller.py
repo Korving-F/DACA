@@ -10,16 +10,16 @@ import os
 from vagrant import Vagrant
 
 ### Local modules ###
+from .controller import Controller
 
 ### Setup logging ###
 import logging
 logger = logging.getLogger('daca')
 
-class VagrantController(Vagrant):
+class VagrantController(Vagrant, Controller):
     def __init__(self, vagrant_home: str, **kwargs) -> None:
         logger.debug("Initiating VagrantController")
         self.vagrant = Vagrant()
-
 
     ### PROPERTIES ###
     @property

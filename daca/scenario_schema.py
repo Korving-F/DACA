@@ -99,21 +99,27 @@ scenario_schema = {
         'required': True,
         'type': 'list',
         'nullable': True,
-        'schema': {
-            'type': 'dict',
-            'schema': {
-                'name': {
-                    'type': 'string',
-                    'required': True
-                },
-                'val': {
-                    'type': 'list',
-                    'required': True,
-                    'schema': {
-                        'type': 'dict'
+        'anyof_schema': [
+            {
+                'type': 'dict',
+                'schema': {
+                    'name': {
+                        'type': 'string',
+                        'required': True
+                    },
+                    'val': {
+                        'type': 'list',
+                        'required': True,
+                        'schema': {
+                            'type': 'dict'
+                        }
                     }
                 }
+            },
+            {
+                'type': 'dict',
+                'required': True
             }
-        }
+        ]
     }
 }

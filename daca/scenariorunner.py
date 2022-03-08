@@ -23,8 +23,9 @@ class ScenarioRunner:
                 ) -> None:
         self.scenario_path = scenario_path
         self.scenario = None
+        self.scenario_rendered = False
         self.available_scenarios = self.scenario_path
-        #controller = VagrantController("asd")
+        self.controller = None
 
 
     ### STATIC METHODS ###
@@ -84,6 +85,22 @@ class ScenarioRunner:
             return
         self._scenario = self.available_scenarios[id]
 
+    @property
+    def scenario_rendered(self):
+        return self._scenario_rendered
+    
+    @scenario_rendered.setter
+    def scenario_rendered(self, scenario_rendered: bool):
+        self._scenario_rendered = scenario_rendered
+
+    @property
+    def controller(self):
+        return self._controller
+    
+    @controller.setter
+    def controller(self, controller: bool):
+        self._controller = controller
+
     ### HELPER FUNCTIONS ###
     def list_scenarios(self):
         """
@@ -103,16 +120,19 @@ class ScenarioRunner:
         """
         Summarizes itself: number of variations, # of components, variables etc.
         """
-        click.echo(f"[+] Summarizing runthrough of the following scenario: {self.scenario}")
         self.scenario.render_scenario()
-
-        click.echo(f"[+] Discovered Components:")
+        self.scenario_rendered = True
+        click.echo(f"[+] Summarizing runthrough of the following scenario: '{self.scenario}'")
+        click.echo(f"[+] Discovered file-based components: {'-' if len(self.scenario.scenario_components) == 0 else ''}")
         for component in self.scenario.scenario_components:
             click.echo(f"\t[*] {component}")
             for item in self.scenario.scenario_components[component]:
                 click.echo(f"\t\t[-] {item}")
 
-        click.echo(f"[+] Product gives a total of {len(self.scenario.scenario_component_product)} Component combinations.")
+        click.echo(f"[+] The product between these gives a total of {len(self.scenario.scenario_component_product)} Component combinations.")
+        click.echo(f"[+] With variables included a total of {len(self.scenario.scenario_list)} runthroughs will be executed.")
+        if len(self.scenario.scenario_list) > 0:
+            click.echo(f"[+] Provisioner type is '{self.scenario.scenario_list[0]['scenario']['provisioner']}'.")
 
 
     def build(self):
@@ -133,5 +153,6 @@ class ScenarioRunner:
         """
         
         """
-        pass
+        if not self.scenario_rendered:
+            self.scenario.render_scenario()
 
