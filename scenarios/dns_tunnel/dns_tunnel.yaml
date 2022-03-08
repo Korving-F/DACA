@@ -32,3 +32,5 @@ components:
 variables:
   - name: dns_attack_client
     val: "{{ dns_tunnel.dns_attack_client.variables }}"
+  - name: dns_server
+    val: "{{ dns_server.variables }}"

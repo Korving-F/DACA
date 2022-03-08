@@ -4,7 +4,9 @@ description: |
 image: ubuntu/focal64
 setup:
   type: shell
-  val: apt install bind9
+  val: |
+    apt install bind9
+    "{{ variables.nmap }}"
 run:
   type: shell
   val: systemct status
@@ -17,9 +19,9 @@ artifacts_to_collect:
     val: ["/var/log/bind9.log"]
   - type: elastic
     val: ["hostname:port"]
+
 variables:
-  - name: nmap
-    val:
-      - nmap -sV --script=http-enum 127.0.0.1:8008
-      - nmap -p8008 --script http-waf-detect 127.0.0.1
-      - nmap -p8008 --script http-wordpress-users 127.0.0.1
+  - nmap:
+    - nmap -sV --script=http-enum 127.0.0.1:8009
+    - nmap -p8008 --script http-waf-detect 127.0.0.2
+    - nmap -p8008 --script http-wordpress-users 127.0.0.2

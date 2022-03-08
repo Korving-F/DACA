@@ -3,15 +3,18 @@ import shutil
 import subprocess
 import docker
 
+### Local modules ###
+from .controller import Controller
+
 ### Setup logging ###
 import logging
 logger = logging.getLogger('daca')
 
-class DockerController:
+class DockerController(Controller):
     def __init__(self) -> None:
         pass
 
-    def check_docker_version(self):
+    def check_controller_version(self):
         # Use docker client instead
         logger.info("Checking docker version")
         #logger.exception("error") # prints nice stacktrace

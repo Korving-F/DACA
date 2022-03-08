@@ -33,5 +33,5 @@ dns_attack_client:
     #    val: 'run.py'
 
     variables:
-        - a: ["woop", "w00p"]
-        - b: ["f00", "b4r"]
+        - a: ["woop", "w00p","1235","2342134","123133"]
+        - b: ["f00", "b4r","123","234234","12333"]

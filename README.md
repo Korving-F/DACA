@@ -94,11 +94,10 @@ components:
 
 # These entries are substituted for the Jinja2 tempate variable in the run section.
 variables:
-  - name: nmap
-    val:
-      - nmap -sV --script=http-enum 127.0.0.1:8008
-      - nmap -p8008 --script http-waf-detect 127.0.0.1
-      - nmap -p8008 --script http-wordpress-users 127.0.0.1
+  - nmap:
+    - nmap -sV --script=http-enum 127.0.0.1:8008
+    - nmap -p8008 --script http-waf-detect 127.0.0.1
+    - nmap -p8008 --script http-wordpress-users 127.0.0.1
 ```
 
 ## Architecture
