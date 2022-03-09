@@ -49,26 +49,6 @@ def set_logging(debug):
 @click.option('--debug', is_flag=True, help='Set debug logging level.')
 def main(debug):
     set_logging(debug)
-    #import time
-    #with click.progressbar(["a","b","c","d"]) as bar:
-    #    for foo in bar:
-    #        print(foo)
-    #        time.sleep(1)
-
-    #x = click.prompt("ASD")
-    #x = click.prompt("asd", confirmation_prompt=True)
-
-
-@main.command()
-@click.option('--path', '-p', help='Path to scenario definition file.', type=str)
-def build(path):
-    """
-    Download and build the infrastructure for the selected scenario.
-    E.g. VMs, Docker containers or cloud-based infrastructure used as attack, server or 
-    client machines as well as supportive components to collect data.
-    """
-    logger.debug(f"Building scenario with path: {path}")
-    click.echo("wOOp")
 
 
 @main.command()
@@ -85,19 +65,39 @@ def destroy(path):
 
 
 @main.command()
-@click.option('--path', help='Path to scenario definition file or directory.', type=str)
-@click.option('--datapath', help='Path where extracted data samples should be stored.', type=str)
+@click.option('--path', '-p', default='scenarios', help='Path to scenario definition file.', type=str)
+@click.option('--id', '-i', help='ID of the scenario that needs to be displayed.', type=int)
+@click.option('--workingdir', '-w', default='data', help='Working directory where all files are stored (e.g. VMs).', type=str)
+@click.option('--datapath', '-d', help='Path where extracted data samples should be stored.', type=str)
 @click.option('--interactive', is_flag=True, help='Run the scenario interactively')
-def run(path, datapath, interactive):
+#@click.option('--parralelize', '-p', help='Run the scenarios in parrlalel', type=int) # TODO
+def run(path, id, workingdir, datapath, interactive):
     """
     Run the selected scenario.
+
+    Download and build the infrastructure for the selected scenario.
+    E.g. VMs, Docker containers or cloud-based infrastructure used as attack, server or 
+    client machines as well as supportive components to collect data.
     """
     logger.debug(f"Running scenario with path: {path}")
     logger.debug(f"Storing data at path: {datapath}")
+
     click.echo("[+] Starting execution.")
     if interactive == True:
-        print("Run the scenario interactively.")
+        click.echo("Run the scenario interactively.")
 
+    runner = ScenarioRunner(scenario_path=Path(path).absolute(),
+                            working_directory=Path(workingdir).absolute())
+
+    if id != None:
+        runner.set_scenario_by_id(id)
+
+    if runner.scenario is None:
+        click.echo("[!] No scenario is set to build. Please point to a file or use the '--id' flag.")
+        exit(1)
+
+    runner.run()
+    
 
 @main.command()
 @click.option('--path', '-p', default='scenarios', help='Path to scenario definition file or directory.', type=str)
@@ -125,8 +125,6 @@ def info(path, id, summarize, list):
             exit(1)
         
         runner.summarize()
-
-    #print(f"id: {id}")
 
 
 # Function to force print help section

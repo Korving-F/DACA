@@ -17,8 +17,3 @@ artifacts_to_collect:
     val: ["/var/log/bind9.log"]
   - type: elastic
     val: ["hostname:port"]
-variables:
-  - nmap2:
-    - nmap -sV --script=http-enum 127.0.0.1:8008
-    - nmap -p8008 --script http-waf-detect 127.0.0.1
-    - nmap -p8008 --script http-wordpress-users 127.0.0.1
