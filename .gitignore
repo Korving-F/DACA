@@ -1,3 +1,6 @@
+# DACA - Application specific files 
+data/
+
 # Vim - https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
 *~
 [._]*.s[a-v][a-z]

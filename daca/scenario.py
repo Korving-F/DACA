@@ -144,6 +144,7 @@ class Scenario:
         v =  Validator(self.schema)
         
         if scenario_dict == None:
+            logger.debug(f'The provided scenario was an empty and therefore invalid.')
             return False
 
         if v.validate(scenario_dict):
@@ -248,6 +249,8 @@ class Scenario:
                 if self.scenario_components == {}:
                     for key,_ in var.items():
                         var = { 'name': key, 'val': [var]}
+                if var['val'] == None:
+                    continue
                 for item in var['val']:
                     variable_list.update(item)
 
@@ -272,11 +275,12 @@ class Scenario:
                     continue
                 final_list.append({'variables': scenario['variables'], 'scenario': scenario_loaded})
                 list_of_seen_scenarios.append(scenario_loaded)
-                logger.debug(f"Scenario is valid")
+                logger.debug(f"Scenario is valid: {self.scenario_path}. Set variables: {scenario['variables']}")
             else:
                 logger.debug(f"A Scenario instance was found to be invalid.")
                 if not error_message_displayed:
-                    click.echo(f"[!] At least one given scenario was found to be invalid ({self.scenario_path}). Please see debug log for more verbose output.")
+                    click.echo(f"\t[!] At least one given scenario variation was found to be invalid ({self.scenario_path}). Please see debug log for more verbose output.")
+                    logger.debug(f"Invalid scenario: {self.scenario_path}")
                     error_message_displayed = True
                 self.is_valid = False
                 continue

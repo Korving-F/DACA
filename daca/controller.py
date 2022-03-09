@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 class Controller(ABC):
     
@@ -13,5 +14,19 @@ class Controller(ABC):
     def validate(self):
         '''
         Validates the created configuration file(s).
+        '''
+        pass
+
+    @abstractmethod
+    def set_working_dir(self, working_dir: Path=None):
+        '''
+        Set working directory for the controller used.
+        '''
+        pass
+
+    @abstractmethod
+    def build_config(self, config: dict):
+        '''
+        Create configuration file(s) based on input scenario dictionary.
         '''
         pass
