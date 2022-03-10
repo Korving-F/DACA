@@ -20,7 +20,7 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
         a.become = true
     end
     {% elif setup['type'] == 'shell' %}
-    {{ hostname }}.vm.provision "shell", inline: '{{ setup['val'] }}'
+     {{ hostname }}.vm.provision "shell", inline: '{{ setup['val'] }}', privileged: true
     {% elif setup['type'] == 'script' %}
     {{ hostname }}.vm.provision "shell", path: {{ setup['val'] }}
     {% endif %}
@@ -29,9 +29,9 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {{ hostname }}.trigger.after [:up] do |trigger|
         trigger.info = "Executing 'run'-section of the scenario component."
         {%- if run['type'] == 'script' -%}
-        trigger.run_remote = {path: {{ run['val'] }}}
+        trigger.run_remote = { path: {{ run['val'] }}, privileged: true }
         {% elif run['type'] == 'shell' %}
-        trigger.run_remote = {inline: '{{ run['val'] }}' }
+        trigger.run_remote = { inline: '{{ run['val'] }}', privileged: true }
         {%- endif %}
     end
 

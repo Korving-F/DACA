@@ -279,7 +279,7 @@ class ScenarioRunner:
 
                 # Let the controller build the needed configurations and validate it.
                 self.controller.build_config(scenario, scenario_data_directory, instance_data_directory)
-                #self.controller.validate()
+                self.controller.validate()
 
                 # Let the controller run the configuration file
                 #self.controller.run()

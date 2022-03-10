@@ -117,5 +117,3 @@ class VagrantController(Vagrant, Controller):
         m = template.render(vm_dict)
         with open(f"{scenario_dir}/Vagrantfile", "w") as f:
             f.write(m)
-
-        self.validate()

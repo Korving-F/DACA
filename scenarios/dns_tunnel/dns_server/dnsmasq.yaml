@@ -4,17 +4,18 @@ description: |
 image: ubuntu/focal64
 setup:
   type: shell
-  val: |
-    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y dnsmasq
-    echo -e "log-queries\nlog-facility=/var/log/dnsmasq.log\nno-resolv\nserver=9.9.9.9\nserver=8.8.8.8\nserver=/attack/172.18.0.2\nstrict-order" > /etc/dnsmasq.conf
+  val: |-
+    apt-get update; sudo DEBIAN_FRONTEND=noninteractive apt-get install -y dnsmasq; systemctl stop systemd-resolved; systemctl disable systemd-resolved; echo -e "log-queries\nlog-facility=/var/log/dnsmasq.log\nno-resolv\nserver=9.9.9.9\nserver=8.8.8.8\nserver=/attack/172.18.0.2\nstrict-order\n" > /etc/dnsmasq.conf
+
+
 run:
   type: shell
-  val: dnsmasq --no-daemon
+  val: systemctl restart dnsmasq
 artifacts_to_collect:
   #- type: pcap
   #  val: ["tcpdump -n -t -r /tmp/dns.pcap port 53"]
   - type: files
-    val: ["/var/log/bind9.log"]
+    val: ["/var/log/dnsmasq.log"]
   #- type: mordor
   #  val: ["/var/log/bind9.log"]
   #- type: elastic
