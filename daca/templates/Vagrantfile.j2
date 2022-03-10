@@ -3,8 +3,15 @@
 
 Vagrant.configure({{ vagrant_version|default('"2"') }}) do |config|
 
-    {{ collection_vms }}
+{%- if collection_vms %}
+{%- for collection_vm in collection_vms %}
+{ collection_vm }
+{% endfor %}
+{% endif %}
 
-    {{ vms }}
-
+{% if scenario_vms %}
+{% for vm in scenario_vms %}
+{{ vm }}
+{%- endfor -%}
+{%- endif -%}
 end

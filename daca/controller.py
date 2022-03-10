@@ -18,15 +18,24 @@ class Controller(ABC):
         pass
 
     @abstractmethod
-    def set_working_dir(self, working_dir: Path=None):
+    def build_config(self, config: dict):
         '''
-        Set working directory for the controller used.
+        Create configuration file(s) based on input scenario dictionary.
         '''
         pass
 
     @abstractmethod
-    def build_config(self, config: dict):
+    def set_env_variable(self, env_variable_name: str, env_variable_val: str):
         '''
-        Create configuration file(s) based on input scenario dictionary.
+        Set environmental variables needed by the controller / provisioner.
+        E.g. working directory,
+        '''
+        pass
+
+    @abstractmethod
+    def set_working_directory(self, working_dir: Path):
+        '''
+        Set environmental variables needed by the controller / provisioner.
+        E.g. working directory,
         '''
         pass
