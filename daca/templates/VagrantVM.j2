@@ -1,7 +1,7 @@
-config.vm.define {{ hostname }} do |{{ hostname }}|
+config.vm.define "{{ hostname }}" do |{{ hostname }}|
 
     # Set the box-type and version (default is latest)
-    {{ hostname }}.vm.box = {{ image }}
+    {{ hostname }}.vm.box = "{{ image }}"
     {{ hostname }}.vm.box_version = {{ image_version|default('">= 0"') }}
     
     # Set the hostname
@@ -10,15 +10,53 @@ config.vm.define {{ hostname }} do |{{ hostname }}|
     # Setup networking
     #config.vm.network # TODO
 
-    # Provision VM method
+    # Provision VM
+    {%- if setup['type'] == 'ansible' %}
     {{ hostname }}.vm.provision "ansible_local" do |a|
         a.install = true,
         a.install_mode = "default",
-        a.playbook = "{{ provisioning_playbook }}",
+        a.playbook = {{ setup['val'] }},
         a.become_user = "root",
         a.become = true
     end
+    {% elif setup['type'] == 'shell' %}
+    {{ hostname }}.vm.provision "shell", inline: '{{ setup['val'] }}'
+    {% elif setup['type'] == 'script' %}
+    {{ hostname }}.vm.provision "shell", path: {{ setup['val'] }}
+    {% endif %}
 
+    # Runtime triggers
+    {{ hostname }}.trigger.after [:up] do |trigger|
+        trigger.info = "Executing 'run'-section of the scenario component."
+        {%- if run['type'] == 'script' -%}
+        trigger.run_remote = {path: {{ run['val'] }}}
+        {% elif run['type'] == 'shell' %}
+        trigger.run_remote = {inline: '{{ run['val'] }}' }
+        {%- endif %}
+    end
+
+    # Data collection
+    {{ hostname }}.trigger.before [:destroy, :halt] do |trigger|
+        trigger.info = "Grabbing artifacts from Guest machine."
+        {% if artifacts_to_collect -%}
+        {% for artifact in artifacts_to_collect -%}
+        {% if artifact['type'] == 'files' %}
+        {#-
+            # vagrant-scp independent way of scp-ing a file
+            trigger.run = {inline: "vagrant ssh-config --host {{ hostname }} > {{ dest_path}}/config_{{ hostname }}.txt"}
+        -#}
+        {%- for file in artifact['val'] -%}
+        {#-
+            # vagrant-scp independent way of scp-ing a file
+            trigger.run = {inline: "scp -F {{ dest_path}}/config_{{ hostname }}.txt {{ hostname }}:{{ file }} {{ dest_path }}"}
+        -#}
+        trigger.run = { inline: 'vagrant scp {{ hostname }}:{{ file }} {{ dest_path }}' }
+        {%- endfor -%}
+        {%- endif  -%}
+        {%- endfor -%}
+        {%- endif  %} 
+    end
+    {#
     # TODO: a series of variables that might be encountered in components.
     # https://www.vagrantup.com/docs/vagrantfile/machine_settings
     #config.vm.allow_fstab_modification (boolean)
@@ -46,6 +84,7 @@ config.vm.define {{ hostname }} do |{{ hostname }}|
     #config.vm.provision
     #config.vm.synced_folder
     #config.vm.usable_port_range (range)
+    #}
 end
 
 

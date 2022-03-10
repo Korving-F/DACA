@@ -23,6 +23,11 @@ pip3 install pipenv
 pipenv install
 ```
 
+```bash
+vagrant plugin install vagrant-vbguest
+vagrant plugin install vagrant-scp
+```
+
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory.
 Scenario files are found when they have the same name as their scenario directory.

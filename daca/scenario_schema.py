@@ -16,6 +16,11 @@ scenario_schema = {
         'required': True,
         'type': 'boolean'
     },
+    'template_dir': {
+        'required': False,
+        'nullable': True,
+        'type': 'string'
+    },
     'components': {
         'required': True,
         'type': 'list',
@@ -41,7 +46,7 @@ scenario_schema = {
                         'type': {
                             'required': True,
                             'type': 'string',
-                            'regex': '^(?i)(shell|ansible)$'
+                            'regex': '^(?i)(shell|script|ansible)$'
                         },
                         'val': {
                             'required': True,

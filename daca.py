@@ -83,6 +83,7 @@ def run(path, id, workingdir, datapath, interactive):
     logger.debug(f"Storing data at path: {datapath}")
 
     click.echo("[+] Starting execution.")
+    # TODO
     if interactive == True:
         click.echo("Run the scenario interactively.")
 

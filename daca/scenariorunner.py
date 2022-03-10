@@ -2,6 +2,7 @@
 This class takes a scenario description and executes it. 
 '''
 ### System modules ###
+from tracemalloc import Snapshot
 from typing import Dict, Any
 from datetime import datetime
 import psutil
@@ -139,16 +140,26 @@ class ScenarioRunner:
     def controller(self, controller: str):
         self._controller = controller
 
-    ### HELPER FUNCTIONS ###
-    def set_controller_type(self, type):
-        if type == "vagrant":
+    @property
+    def controller_type(self):
+        return self._controller_type
+    
+    @controller_type.setter
+    def controller_type(self, controller_type: str):
+        self._controller_type = controller_type
+        if controller_type == "vagrant":
             self.controller = VagrantController()
-        elif type == "docker":
+        elif controller_type == "docker":
             self.controller = DockerController()
-        elif type == "terraform":
+        elif controller_type == "terraform":
             self.controller = TerraformController()
-        else:
-            raise ValueError(f"An unsupported controller was provided: {type}")
+
+    ### HELPER FUNCTIONS ###
+    def set_controller_env_variable(self, var_name, var_value):
+        if self.controller_type == 'vagrant':
+            var_name = 'VAGRANT_CWD' if var_name == "CWD" else var_name
+            var_name = 'VAGRANT_HOME' if var_name == "HOME" else var_name
+        self.controller.set_env_variable(var_name, var_value)
 
     def list_scenarios(self):
         """
@@ -202,7 +213,7 @@ class ScenarioRunner:
 
         # TODO: add health check for Vagrant version etc.        
         controller_type = self.scenario.scenario_list[0]['scenario']['provisioner']
-        self.set_controller_type(controller_type)
+        self.controller_type = controller_type
 
         # Create working directory and all parent directories if not exists.
         click.echo(f"[+] Creating main working directory if not exists: {self.working_directory}")
@@ -211,7 +222,7 @@ class ScenarioRunner:
         scenario_data_directory = Path(f"{self.working_directory}/{self.scenario.scenario_list[0]['scenario']['name'].strip().lower().replace(' ','_')}").absolute()
         click.echo(f"[+] Creating scenario sub-directory if not exists: {scenario_data_directory}")
         scenario_data_directory.mkdir(parents=True, exist_ok=True)
-        self.controller.set_working_dir("scenario_data_directory")
+        self.controller.set_working_directory(scenario_data_directory)
 
         click.echo(f"[+] Running {len(self.scenario.scenario_list)} scenarios with {len(self.scenario.scenario_list[0]['scenario']['components'])} file-based components.")
 
@@ -227,10 +238,12 @@ class ScenarioRunner:
             click.echo(f"[!] Exiting scenario execution.")
             exit()
         
+        # TODO: multithreading would happen here but click progressbar does not support that.
+        # Alternative with multithreading support: https://github.com/tqdm/tqdm
         with click.progressbar(self.scenario.scenario_list) as bar:
             for scenario in bar:
                 click.echo()
-
+                #print(bar.pos)
                 # Create an artifact directory for a single instance of the scenario 
                 instance_data_directory = Path(f"{scenario_data_directory}/{self.dict_hash(scenario)}").absolute()
                 instance_data_directory.mkdir(parents=True, exist_ok=True)
@@ -255,11 +268,17 @@ class ScenarioRunner:
 
                 for component in scenario['scenario']['components']:
                     if component['artifacts_to_collect'] != None:
-                        component_data_directory = Path(f"{instance_data_directory}/{component['name'].strip().lower().replace(' ','_')}").absolute()
+                        component_data_directory = Path(f"{instance_data_directory}/{component['name'].strip().lower().replace(' ','').replace('_','')}").absolute()
                         component_data_directory.mkdir(parents=True, exist_ok=True)
 
+
+                # Set CWD for the controller ()
+                #self.set_controller_env_variable('CWD', scenario_data_directory) # instance_data_directory
+                #self.controller.set_env_variable('VAGRANT_CWD', instance_data_directory) # or scenario_data_directory?
+
+
                 # Let the controller build the needed configurations and validate it.
-                #self.controller.build_config(scenario, instance_data_directory)
+                self.controller.build_config(scenario, scenario_data_directory, instance_data_directory)
                 #self.controller.validate()
 
                 # Let the controller run the configuration file
@@ -268,6 +287,15 @@ class ScenarioRunner:
                 # Let the controller gather evidence
                 #self.controller.gather_data()
 
-                # 
+                
+                #if previous_components.setup == current_component.setup:
+                #    self.controller.snapshot_pop()
+                #    self.controller.snapshot_push()
+                #    self.controller.snapshot_save(name="base")
+                #    self.controller.snapshot_restore(name="base")
 
+
+
+                exit()
                 click.echo()
+                
