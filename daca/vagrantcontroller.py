@@ -117,3 +117,15 @@ class VagrantController(Vagrant, Controller):
         m = template.render(vm_dict)
         with open(f"{scenario_dir}/Vagrantfile", "w") as f:
             f.write(m)
+        with open(f"{data_dir}/Vagrantfile", "w") as f:
+            f.write(m)
+
+    def run(self):
+        # 1. make sure scenario is down and artifacts are collected through trigger
+
+        # 2. build config
+
+        # 3. 
+
+        self.vagrant.up()
+        self.vagrant.halt()

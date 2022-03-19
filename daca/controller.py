@@ -39,3 +39,10 @@ class Controller(ABC):
         E.g. working directory,
         '''
         pass
+
+    @abstractmethod
+    def run(self):
+        '''
+        Run the configuration file.
+        '''
+        pass

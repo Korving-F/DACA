@@ -39,6 +39,12 @@ scenario_schema = {
                     'required': True,
                     'type': 'string'
                 },
+                'ipv4_address': {
+                    'required': False,
+                    'nullable': False,
+                    'type': 'string',
+                    'regex': '^(127|10)(\.\d{1,3}){3}$|^(172\.1[6-9]|172\.2[0-9]|172\.3[0-1]|192\.168)(\.\d{1,3}){2}$'
+                },
                 'setup': {
                     'required': True,
                     'type': 'dict',
@@ -79,7 +85,7 @@ scenario_schema = {
                             'type': {
                                 'type': 'string',
                                 'required': True,
-                                'regex': '^(?i)(pcap|files|mordor|elastic)$'
+                                'regex': '^(?i)(pcap|files|mordor|elastic|cli_recording)$'
                             },
                             'val': {
                                 'type': 'list',

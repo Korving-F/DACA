@@ -8,7 +8,11 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {{ hostname }}.vm.hostname = "{{ hostname }}"
 
     # Setup networking
-    #config.vm.network # TODO
+    {%- if ipv4_address %}
+    {{ hostname }}.vm.network "private_network", ip: "{{ ipv4_address }}", virtualbox__intnet: "intnet"
+    {% else %}
+    {{ hostname }}.vm.network "private_network", type: "dhcp"
+    {%- endif %}
 
     # Provision VM
     {%- if setup['type'] == 'ansible' %}
@@ -22,69 +26,76 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {% elif setup['type'] == 'shell' %}
      {{ hostname }}.vm.provision "shell", inline: '{{ setup['val'] }}', privileged: true
     {% elif setup['type'] == 'script' %}
-    {{ hostname }}.vm.provision "shell", path: {{ setup['val'] }}
+    {{ hostname }}.vm.provision "shell", path: {{ setup['val'] }}, privileged: true
     {% endif %}
 
     # Runtime triggers
-    {{ hostname }}.trigger.after [:up] do |trigger|
+    {#- BEGIN TCPDUMP SECTION #}
+    {%- if artifacts_to_collect -%}
+    {%- for artifact in artifacts_to_collect -%}
+    {% if artifact['type'] == 'pcap' %}
+    {{ hostname }}.trigger.after [:up, :reload] do |trigger|
+        trigger.info = "Begin TCPDUMP capture."
+        trigger.run_remote = { inline: 'rm -f nohup.out; nohup {{ artifact['val'][0] }} & sleep 1; echo $! > /var/run/tcpdump.pid', privileged: true }
+    end
+    {%- endif  %}
+    {%- endfor %}
+    {%- endif  %}
+    {#- END TCPDUMP SECTION #}
+    {{ hostname }}.trigger.after [:up, :reload] do |trigger|
         trigger.info = "Executing 'run'-section of the scenario component."
         {%- if run['type'] == 'script' -%}
         trigger.run_remote = { path: {{ run['val'] }}, privileged: true }
         {% elif run['type'] == 'shell' %}
+        {%- set ns = namespace(cli_setting_seen=false) %}
+        {%- if artifacts_to_collect -%}
+        {%- for artifact in artifacts_to_collect -%}
+        {%- if artifact['type'] == 'cli_recording' %}
+        {%- if not ns.cli_setting_seen %}
+        {%- set cli_output_file = artifact['val'][0] %}
+        trigger.run_remote = { inline: 'asciinema rec {{ cli_output_file }} -c \'{{ run['val'] }}\'', privileged: true }
+        {%- set ns.cli_setting_seen = true %}
+        {%- endif %}
+        {%- endif %}
+        {%- endfor %}
+        {%- endif %}
+        {%- if not ns.cli_setting_seen %}
         trigger.run_remote = { inline: '{{ run['val'] }}', privileged: true }
+        {%- endif -%}
         {%- endif %}
     end
 
     # Data collection
-    {{ hostname }}.trigger.before [:destroy, :halt] do |trigger|
-        trigger.info = "Grabbing artifacts from Guest machine."
-        {% if artifacts_to_collect -%}
-        {% for artifact in artifacts_to_collect -%}
-        {% if artifact['type'] == 'files' %}
-        {#-
-            # vagrant-scp independent way of scp-ing a file
-            trigger.run = {inline: "vagrant ssh-config --host {{ hostname }} > {{ dest_path}}/config_{{ hostname }}.txt"}
-        -#}
-        {%- for file in artifact['val'] -%}
-        {#-
-            # vagrant-scp independent way of scp-ing a file
-            trigger.run = {inline: "scp -F {{ dest_path}}/config_{{ hostname }}.txt {{ hostname }}:{{ file }} {{ dest_path }}"}
-        -#}
-        trigger.run = { inline: 'vagrant scp {{ hostname }}:{{ file }} {{ dest_path }}' }
-        {%- endfor -%}
-        {%- endif  -%}
-        {%- endfor -%}
-        {%- endif  %} 
+    {% if artifacts_to_collect -%}
+    {% for artifact in artifacts_to_collect -%}
+    {%- if artifact['type'] == 'pcap' %}
+    {{ hostname }}.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Stopping TCPDUMP"
+        trigger.run_remote = { inline: 'if [ -f /var/run/tcpdump.pid ]; then kill $(cat /var/run/tcpdump.pid); rm -f /var/run/tcpdump.pid; fi', privileged: true }
     end
-    {#
-    # TODO: a series of variables that might be encountered in components.
-    # https://www.vagrantup.com/docs/vagrantfile/machine_settings
-    #config.vm.allow_fstab_modification (boolean)
-    #config.vm.allow_hosts_modification (boolean)
-    #config.vm.base_mac (string)
-    #config.vm.base_address (string)
-    #config.vm.boot_timeout (integer)
-    #config.vm.box_check_update (boolean)
-    #config.vm.box_download_checksum (string)
-    #config.vm.box_download_checksum_type (string)
-    #config.vm.box_download_client_cert (string)
-    #config.vm.box_download_ca_cert (string)
-    #config.vm.box_download_ca_path (string)
-    #config.vm.box_download_options (map)
-    #config.vm.box_download_insecure (boolean)
-    #config.vm.box_download_location_trusted (boolean)
-    #config.vm.box_url (string, array of strings)
-    #config.vm.communicator (string)
-    #config.vm.disk
-    #config.vm.graceful_halt_timeout (integer)
-    #config.vm.guest (string, symbol)
-    #config.vm.ignore_box_vagrantfile (boolean)
-    #config.vm.post_up_message (string)
-    #config.vm.provider
-    #config.vm.provision
-    #config.vm.synced_folder
-    #config.vm.usable_port_range (range)
-    #}
+    {% elif artifact['type'] == 'files' %}
+    {%- for file in artifact['val'] -%}
+    {{ hostname }}.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Changing permissions on the remote artifact: {{ file }}"
+        trigger.run_remote = { inline: 'chmod o+r {{ file }}', privileged: true }
+    end
+    {{ hostname }}.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Grabbing artifact from Guest machine: {{ file }}"
+        trigger.run = { inline: 'vagrant scp {{ hostname }}:{{ file }} {{ dest_path }}' }
+    end
+    {{ hostname }}.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Removing artifact from Guest machine: {{ file }}"
+        trigger.run_remote = { inline: 'rm -rf {{ file }}', privileged: true }
+    end
+    {% endfor -%}
+    {% endif  %}
+    {%- endfor -%}
+    {%- endif  %}
+    {#-
+        # vagrant-scp independent way of scp-ing a file
+        trigger.run = {inline: "vagrant ssh-config --host {{ hostname }} > {{ dest_path}}/config_{{ hostname }}.txt"}
+        trigger.run = {inline: "scp -F {{ dest_path}}/config_{{ hostname }}.txt {{ hostname }}:{{ file }} {{ dest_path }}"}
+    -#}
 end
 
 

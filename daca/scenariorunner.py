@@ -276,7 +276,7 @@ class ScenarioRunner:
                 #self.set_controller_env_variable('CWD', scenario_data_directory) # instance_data_directory
                 #self.controller.set_env_variable('VAGRANT_CWD', instance_data_directory) # or scenario_data_directory?
 
-
+                pprint(scenario)
                 # Let the controller build the needed configurations and validate it.
                 self.controller.build_config(scenario, scenario_data_directory, instance_data_directory)
                 self.controller.validate()
