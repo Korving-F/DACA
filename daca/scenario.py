@@ -10,7 +10,6 @@ from pathlib import Path
 from cerberus import Validator
 from pprint import pformat, pprint
 from itertools import product
-from tomli import load
 import yaml
 
 ### Local modules ###
