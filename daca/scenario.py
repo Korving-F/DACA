@@ -218,7 +218,8 @@ class Scenario:
                 template_vars = {}
                 for component in self.scenario_components:
                     with open(instance[component], 'r') as f:
-                        template_vars[component] = yaml.safe_load(f.read())
+                        m = yaml.safe_load(f.read())
+                        template_vars[component] = m
 
                 m = template.render(template_vars)
                 int_scenario_list.append(m)
@@ -240,10 +241,11 @@ class Scenario:
                 logger.debug(f"All variables need to be findable under the 'variables' section. At least one was not found: {missing_vars}")
                 continue
 
-            # One last iteration of the template
+            # Load the scenario and perform final jinja variale string operation
             loaded_scenario = yaml.safe_load(scenario)
             template = env.from_string(scenario.replace('"{{','{{').replace('}}"','}}'))
 
+            # One last iteration of the template to get the matrix between variables
             variable_list = {}
             for var in loaded_scenario['variables']:
                 if self.scenario_components == {}:

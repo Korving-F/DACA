@@ -7,6 +7,9 @@ See also:
 ### System modules ###
 import re
 import os
+import subprocess
+import click
+import shutil
 from vagrant import Vagrant
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape, meta
@@ -75,11 +78,15 @@ class VagrantController(Vagrant, Controller):
         '''
         Validates the created Vagrantfile.
         '''
-        output = self._vagrant._run_vagrant_command(['validate'])
-        m = re.search(r'^Vagrantfile validated successfully.$', output)
-        if m is None:
-            raise Exception(f"Failed to parse vagrant validate output. output={output}")
-        return True
+        try:
+            output = self._vagrant._run_vagrant_command(['validate'])
+            m = re.search(r'^Vagrantfile validated successfully.$', output)
+            if m is not None:
+                return False
+            return True
+        except subprocess.CalledProcessError as err:
+            click.echo(f"\t[!] {err}")
+            return False     
 
 
     def validate_env(self):
@@ -93,7 +100,7 @@ class VagrantController(Vagrant, Controller):
         pass
 
 
-    def build_config(self, config: dict, scenario_dir: Path, data_dir: Path):
+    def build_config(self, config: dict, scenario_dir: Path, data_dir: Path, original_dir: Path):
         loader = FileSystemLoader(f"{Path(__file__).parent.absolute()}/templates", encoding='utf8')
         self.jinja_env = Environment(loader=loader, autoescape=select_autoescape())
 
@@ -107,18 +114,42 @@ class VagrantController(Vagrant, Controller):
         for component in config['scenario']['components']:
             component_dict = component
             component_dict['hostname'] = component_dict['name'].strip().lower().replace(' ','').replace('_','')
-            component_dict['dest_path'] = f"{data_dir}/{component_dict['hostname']}/"
+            #component_dict['dest_path'] = f"{data_dir}/{component_dict['hostname']}/"
+            component_dict['dest_path'] = f"./{data_dir.relative_to(scenario_dir)}/{component_dict['hostname']}/"
 
             template = self._jinja_env.get_template('VagrantVM.j2')
             m = template.render(component_dict)
             vm_dict['scenario_vms'].append(m)
         
+        # Grab the Vagrant template, render it and write to data / scenario directories
         template = self._jinja_env.get_template('Vagrantfile.j2')
         m = template.render(vm_dict)
         with open(f"{scenario_dir}/Vagrantfile", "w") as f:
             f.write(m)
         with open(f"{data_dir}/Vagrantfile", "w") as f:
-            f.write(m)
+            # Remove instance string
+            path_string_to_remove = f"{data_dir.relative_to(scenario_dir)}/"
+            for line in m.split('\n'):
+                if path_string_to_remove in line:
+                    line = line.replace(path_string_to_remove, '')
+                f.write(line + '\n')
+
+        # Write any scripts to the scenario / data directories
+        # Go over scenario to copy over replace ansible/script provisioners
+        for component in config['scenario']['components']:
+            if component["setup"]["type"] in ["script", "ansible"]:
+                # find file and change assignment to full path
+                for p in original_dir.rglob("*"):
+                    if p.name == component["setup"]["val"]:
+                        shutil.copy(p, data_dir)
+                        shutil.copy(p, scenario_dir)
+            if component["run"]["type"] in ["script"]:
+                # find file and change assignment to full path
+                 for p in original_dir.rglob("*"):
+                    if p.name == component["run"]["val"]:
+                        shutil.copy(p, data_dir)
+                        shutil.copy(p, scenario_dir)
+
 
     def run(self):
         # 1. make sure scenario is down and artifacts are collected through trigger
@@ -129,3 +160,4 @@ class VagrantController(Vagrant, Controller):
 
         self.vagrant.up()
         self.vagrant.halt()
+        #pass

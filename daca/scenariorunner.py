@@ -258,7 +258,7 @@ class ScenarioRunner:
 
                 with open(instance_data_metadata_file, 'w') as f:
                     f.write(f"execution_time: {datetime.now()}\n\n")
-                    f.write(f"original_scenario_file: {self.scenario.scenario_path}\n\n")
+                    #f.write(f"original_scenario_file: {self.scenario.scenario_path}\n\n")
                     f.write(f"variables: {json.dumps(scenario['variables'])}\n\n")
                     f.write(f"scenario: {json.dumps(scenario['scenario'])}\n\n")
 
@@ -276,13 +276,13 @@ class ScenarioRunner:
                 #self.set_controller_env_variable('CWD', scenario_data_directory) # instance_data_directory
                 #self.controller.set_env_variable('VAGRANT_CWD', instance_data_directory) # or scenario_data_directory?
 
-                pprint(scenario)
+                #pprint(scenario)
                 # Let the controller build the needed configurations and validate it.
-                self.controller.build_config(scenario, scenario_data_directory, instance_data_directory)
+                self.controller.build_config(scenario, scenario_data_directory, instance_data_directory, self.scenario.scenario_parent_path)
                 self.controller.validate()
 
                 # Let the controller run the configuration file
-                #self.controller.run()
+                self.controller.run()
 
                 # Let the controller gather evidence
                 #self.controller.gather_data()
@@ -296,6 +296,6 @@ class ScenarioRunner:
 
 
 
-                exit()
-                click.echo()
+                #exit()
+                #click.echo()
                 

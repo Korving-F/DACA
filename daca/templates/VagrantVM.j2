@@ -19,14 +19,14 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {{ hostname }}.vm.provision "ansible_local" do |a|
         a.install = true,
         a.install_mode = "default",
-        a.playbook = {{ setup['val'] }},
+        a.playbook = '{{ setup['val'] }}',
         a.become_user = "root",
         a.become = true
     end
     {% elif setup['type'] == 'shell' %}
      {{ hostname }}.vm.provision "shell", inline: '{{ setup['val'] }}', privileged: true
     {% elif setup['type'] == 'script' %}
-    {{ hostname }}.vm.provision "shell", path: {{ setup['val'] }}, privileged: true
+    {{ hostname }}.vm.provision "shell", path: '{{ setup['val'] }}', privileged: true
     {% endif %}
 
     # Runtime triggers
@@ -45,7 +45,7 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {{ hostname }}.trigger.after [:up, :reload] do |trigger|
         trigger.info = "Executing 'run'-section of the scenario component."
         {%- if run['type'] == 'script' -%}
-        trigger.run_remote = { path: {{ run['val'] }}, privileged: true }
+        trigger.run_remote = { path: '{{ run['val'] }}', privileged: true }
         {% elif run['type'] == 'shell' %}
         {%- set ns = namespace(cli_setting_seen=false) %}
         {%- if artifacts_to_collect -%}
