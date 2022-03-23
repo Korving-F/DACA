@@ -118,7 +118,7 @@ class ScenarioRunner:
         self._scenario = scenario
 
     def set_scenario_by_id(self, id: int):
-        if id >= len(self.available_scenarios) - 1:
+        if id > len(self.available_scenarios) - 1:
             click.echo(f"[!] Scenario with ID {id} not available.")
             return
         self._scenario = self.available_scenarios[id]
