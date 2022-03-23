@@ -1,0 +1,26 @@
+config.vm.define "{{ hostname }}" do |{{ hostname }}|
+
+    # Set the box-type and version (default is latest)
+    {{ hostname }}.vm.box = "{{ image }}"
+    {{ hostname }}.vm.box_version = {{ image_version|default('">= 0"') }}
+    
+    # Set the hostname
+    {{ hostname }}.vm.hostname = "{{ hostname }}"
+
+    # Setup networking
+    {{ hostname }}.vm.network "private_network", ip: "{{ ipv4_address }}", virtualbox__intnet: "intnet"
+
+    # Provision VM
+    {{ hostname }}.vm.provision "ansible_local" do |a|
+        a.install = true,
+        a.install_mode = "default",
+        a.playbook = 'kafka_playbook',
+        a.become_user = "root",
+        a.become = true
+    end
+
+    {{ hostname }}.trigger.after [:up, :reload] do |trigger|
+        trigger.info = "Begin TCPDUMP capture."
+        trigger.run_remote = { inline: 'rm -f nohup.out; nohup {{ artifact['val'][0] }} & sleep 1; echo $! > /var/run/tcpdump.pid', privileged: true }
+    end
+end
