@@ -1,0 +1,8 @@
+
+      Gruyere started...
+          http://127.0.0.1:8008/
+          http://127.0.0.1:8008/551146687997636550564917249425057511003/
+127.0.0.1 - - [23/Mar/2022 13:53:28] "GET / HTTP/1.0" 302 -
+DANGER! Request without unique id: /sdk
+
+Exit: bad_id

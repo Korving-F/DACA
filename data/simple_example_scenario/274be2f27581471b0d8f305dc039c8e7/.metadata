@@ -1,0 +1,6 @@
+execution_time: 2022-03-23 15:53:54.651898
+
+variables: {"nmap": "nmap -p8008 --script http-waf-detect 127.0.0.1"}
+
+scenario: {"name": "Simple example Scenario", "description": "\"This Scenario sets up a vulnerable web application and runs multiple NMAP scans against it.\"\n", "provisioner": "vagrant", "use_default_templates": true, "components": [{"name": "main_server", "description": "Main Ubuntu machine used in this example scenario", "image": "ubuntu/focal64", "setup": {"type": "shell", "val": "echo \"[+] Installing dependencies\"; sudo apt-get update; sudo apt install -y python2.7 unzip nmap asciinema;\necho \"[+] Installing Vulnerable Web App Gruy\u00e8re\"; wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip; unzip /tmp/gruyere-code.zip -d /opt/gruyere-code;\n"}, "run": {"type": "shell", "val": "echo \"[+] Run webserver\"; set -x; sudo python2.7 /opt/gruyere-code/gruyere.py > /tmp/gruyere.log 2>&1 & sleep 1; nmap -p8008 --script http-waf-detect 127.0.0.1;\n"}, "artifacts_to_collect": [{"type": "pcap", "val": ["tcpdump -i any -n -t -w /tmp/web.pcap port 8008"]}, {"type": "files", "val": ["/tmp/gruyere.log", "/tmp/*.cast", "/tmp/*.pcap"]}, {"type": "cli_recording", "val": ["/tmp/nmap.cast"]}]}]}
+
