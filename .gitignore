@@ -1,5 +1,9 @@
 # DACA - Application specific files 
-data/
+!data/
+data/*
+data/simple_example_scenario/.vagrant
+data/simple_example_scenario/Vagrantfile
+!data/simple_example_scenario/
 
 # Vim - https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
 *~

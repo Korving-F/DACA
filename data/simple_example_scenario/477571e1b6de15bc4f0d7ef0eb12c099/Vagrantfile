@@ -1,0 +1,82 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+
+
+config.vm.define "mainserver" do |mainserver|
+
+    # Set the box-type and version (default is latest)
+    mainserver.vm.box = "ubuntu/focal64"
+    mainserver.vm.box_version = ">= 0"
+    
+    # Set the hostname
+    mainserver.vm.hostname = "mainserver"
+
+    # Setup networking
+    mainserver.vm.network "private_network", type: "dhcp"
+
+    # Provision VM
+     mainserver.vm.provision "shell", inline: 'echo "[+] Installing dependencies"; sudo apt-get update; sudo apt install -y python2.7 unzip nmap asciinema;
+echo "[+] Installing Vulnerable Web App Gruyère"; wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip; unzip /tmp/gruyere-code.zip -d /opt/gruyere-code;
+', privileged: true
+    
+
+    # Runtime triggers
+    mainserver.trigger.after [:up, :reload] do |trigger|
+        trigger.info = "Begin TCPDUMP capture."
+        trigger.run_remote = { inline: 'rm -f nohup.out; nohup tcpdump -i any -n -t -w /tmp/web.pcap port 8008 & sleep 1; echo $! > /var/run/tcpdump.pid', privileged: true }
+    end
+    mainserver.trigger.after [:up, :reload] do |trigger|
+        trigger.info = "Executing 'run'-section of the scenario component."
+        trigger.run_remote = { inline: 'asciinema rec /tmp/nmap.cast -c \'echo "[+] Run webserver"; set -x; sudo python2.7 /opt/gruyere-code/gruyere.py > /tmp/gruyere.log 2>&1 & sleep 1; nmap -sV -p 8008 --script=http-enum 127.0.0.1;
+\'', privileged: true }
+    end
+
+    # Data collection
+    
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Stopping TCPDUMP"
+        trigger.run_remote = { inline: 'if [ -f /var/run/tcpdump.pid ]; then kill $(cat /var/run/tcpdump.pid); rm -f /var/run/tcpdump.pid; fi', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Changing permissions on the remote artifact: /tmp/gruyere.log"
+        trigger.run_remote = { inline: 'chmod o+r /tmp/gruyere.log', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Grabbing artifact from Guest machine: /tmp/gruyere.log"
+        trigger.run = { inline: 'vagrant scp mainserver:/tmp/gruyere.log mainserver/' }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Removing artifact from Guest machine: /tmp/gruyere.log"
+        trigger.run_remote = { inline: 'rm -rf /tmp/gruyere.log', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Changing permissions on the remote artifact: /tmp/*.cast"
+        trigger.run_remote = { inline: 'chmod o+r /tmp/*.cast', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Grabbing artifact from Guest machine: /tmp/*.cast"
+        trigger.run = { inline: 'vagrant scp mainserver:/tmp/*.cast mainserver/' }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Removing artifact from Guest machine: /tmp/*.cast"
+        trigger.run_remote = { inline: 'rm -rf /tmp/*.cast', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Changing permissions on the remote artifact: /tmp/*.pcap"
+        trigger.run_remote = { inline: 'chmod o+r /tmp/*.pcap', privileged: true }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Grabbing artifact from Guest machine: /tmp/*.pcap"
+        trigger.run = { inline: 'vagrant scp mainserver:/tmp/*.pcap mainserver/' }
+    end
+    mainserver.trigger.before [:destroy, :halt, :reload] do |trigger|
+        trigger.info = "Removing artifact from Guest machine: /tmp/*.pcap"
+        trigger.run_remote = { inline: 'rm -rf /tmp/*.pcap', privileged: true }
+    end
+    end
+
+
+end

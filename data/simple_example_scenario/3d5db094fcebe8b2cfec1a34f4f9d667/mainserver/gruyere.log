@@ -1,0 +1,7 @@
+
+      Gruyere started...
+          http://127.0.0.1:8008/
+          http://127.0.0.1:8008/665123503102957456178907727815419231130/
+DANGER! Request without unique id: /wp-login.php
+
+Exit: bad_id
