@@ -43,20 +43,28 @@ The run section is evaluated on Scenario execution.
 In the background network traffic can be captured as well as logs can be streamed to a kafka broker.
 Raw logs or other artifacts can be gathered as well.
 
+### Multi-component scenario
 ```bash
 scenarios/
-├── web_attack_scenario           # 
-│   ├── web_attack_scenario.yaml  # 
-│   ├── component_webserver       # 
+├── web_attack_scenario           # Multi-component scenario.
+│   ├── web_attack_scenario.yaml  # Main scenario file (same name as parent directory)
+│   ├── component_webserver       # First webserver component with 2 instances.
 │   │   ├── httpd.yaml            # 
-│   │   └── nginx.yaml            # 
-│   └── component_scanner         # 
+│   │   ├── httpd_playbook        # Anisble playbook to provision httpd
+│   │   ├── nginx.yaml            # 
+│   │   └── nginx.bash            # Script to provision nginx
+│   └── component_scanner         # Second component with two scanner subcomponents.
 │       ├── nmap.yaml             # 
 │       └── wpscan.yaml           # 
-└── simple_scenario               # 
-    └── simple_scenario.yaml      # 
+└── simple_scenario               # Single component scenario contained in a single file. 
+    └── simple_scenario.yaml      # See below for a working example.
 ```
 
+### Simple, single-file scenario
+<details>
+<summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
+It collects a tcpdump, raw log file and a shell recording as artifacts.</summary>
+<p>
 ```yaml
 # simple_scenario.yaml
 name: "Simple example Scenario"
@@ -71,39 +79,43 @@ components:
     image: ubuntu/focal64
     setup:
       type: shell
-      val: |
-        echo "[+] Installing dependencies"
-        sudo apt-get update
-        sudo apt install -y unzip nmap
+      val: >
+        echo "[+] Installing dependencies";
+        sudo apt-get update;
+        sudo apt install -y python2.7 unzip nmap asciinema;
 
-        echo "[+] Installing Vulnerable Web App Gruyère"
-        wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip
-        unzip /tmp/gruyere-code.zip -d /opt/gruyere-code
-
-        echo "[+] Setting up logfile for Vulnerable Web App"
-        sed -i 's/print >>sys.stderr, message/open("\/tmp\/gruyere.log","a+").writelines(list(message))/g' /opt/gruyere-code/gruyere.py
+        echo "[+] Installing Vulnerable Web App Gruyère";
+        wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip;
+        unzip /tmp/gruyere-code.zip -d /opt/gruyere-code;
 
     # Notice the Jinja2 template variable
     run:
       type: shell
-      val: |
-        echo "[+] Run webserver"
-        python2.7 /opt/gruyere-code/gruyere.py &
-        {{ variables.nmap }}
+      val: >
+        echo "[+] Run webserver";
+        set -x;
+        sudo python2.7 /opt/gruyere-code/gruyere.py > /tmp/gruyere.log 2>&1 & sleep 1;
+        "{{ variables.nmap }}";
 
     artifacts_to_collect:
       - type: pcap
-        val:  ["place BPF filter here"]
+        val:  ["tcpdump -i any -n -t -w /tmp/web.pcap port 8008"]
       - type: files
-        val: ["/tmp/gruyere.log"]
+        val: ["/tmp/gruyere.log", "/tmp/*.cast", "/tmp/*.pcap"]
+      - type: cli_recording
+        val: ["/tmp/nmap.cast"]
 
 # These entries are substituted for the Jinja2 tempate variable in the run section.
 variables:
   - nmap:
-    - nmap -sV --script=http-enum 127.0.0.1:8008
+    - nmap -sV -p 8008 --script=http-enum 127.0.0.1
     - nmap -p8008 --script http-waf-detect 127.0.0.1
     - nmap -p8008 --script http-wordpress-users 127.0.0.1
 ```
+
+</p>
+</details>
+
 
 ## Architecture
 
