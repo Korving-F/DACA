@@ -65,6 +65,7 @@ scenarios/
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
 It collects a tcpdump, raw log file and a shell recording as artifacts.</summary>
 <p>
+
 ```yaml
 # simple_scenario.yaml
 name: "Simple example Scenario"
