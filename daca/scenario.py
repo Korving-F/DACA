@@ -174,7 +174,7 @@ class Scenario:
 
         # Initialize list of scenario definitions.
         list_of_components = {}
-
+        
         # First go over all components that need to be defined.
         for var in missing_vars:
             if var == "variables":
@@ -198,12 +198,14 @@ class Scenario:
         with open(self.scenario_path, 'r') as f:
             template_string = f.read()
             template_string = template_string.replace('"{{','{{').replace('}}"','}}')
+            template_string = template_string.replace('"{%','{%').replace('%}"','%}')
             if self.scenario_components == {}:
+                template_string = template_string.replace('{%','{% raw %}{%').replace('%}','%}{% endraw %}')
                 template_string = template_string.replace('{{','{% raw %}{{').replace('}}','}}{% endraw %}')
                 template = env.from_string(template_string)
             else:
                 template = env.from_string(template_string)
-
+    
         # The following block reads in the components and inserts them into the base scenario dictionary.
         int_scenario_list = []
         #fully_rendered_scenario_list = set()
