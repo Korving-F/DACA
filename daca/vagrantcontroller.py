@@ -24,7 +24,15 @@ logger = logging.getLogger('daca')
 class VagrantController(Vagrant, Controller):
     def __init__(self, **kwargs) -> None:
         logger.debug("Initiating VagrantController")
-        self.vagrant = Vagrant()
+        if logger.level == 10:
+            print("debug!")
+            quiet_stderr = False
+            quet_stdout = False
+        else:
+            print("not debug")
+            quiet_stderr = True
+            quet_stdout = True
+        self.vagrant = Vagrant(quiet_stderr=quiet_stderr, quiet_stdout=quet_stdout)
         self.jinja_env = None
 
     ### PROPERTIES ###
@@ -59,7 +67,7 @@ class VagrantController(Vagrant, Controller):
 
     def set_working_directory(self, working_dir: Path):
         '''
-        Set the working directory where vagrant will look for 
+        Set the working directory where vagrant will look for
         '''
         self.set_env_variable('VAGRANT_CWD', working_dir)
 
@@ -114,12 +122,11 @@ class VagrantController(Vagrant, Controller):
         for component in config['scenario']['components']:
             component_dict = component
             component_dict['hostname'] = component_dict['name'].strip().lower().replace(' ','').replace('_','')
-            #component_dict['dest_path'] = f"{data_dir}/{component_dict['hostname']}/"
-            component_dict['dest_path'] = f"./{data_dir.relative_to(scenario_dir)}/{component_dict['hostname']}/"
-
+            component_dict['dest_path'] = f"{data_dir}/{component_dict['hostname']}/"
             template = self._jinja_env.get_template('VagrantVM.j2')
             m = template.render(component_dict)
             vm_dict['scenario_vms'].append(m)
+
         
         # Grab the Vagrant template, render it and write to data / scenario directories
         template = self._jinja_env.get_template('Vagrantfile.j2')
@@ -128,7 +135,7 @@ class VagrantController(Vagrant, Controller):
             f.write(m)
         with open(f"{data_dir}/Vagrantfile", "w") as f:
             # Remove instance string
-            path_string_to_remove = f"{data_dir.relative_to(scenario_dir)}/"
+            path_string_to_remove = f"{data_dir}/"
             for line in m.split('\n'):
                 if path_string_to_remove in line:
                     line = line.replace(path_string_to_remove, '')
@@ -157,7 +164,6 @@ class VagrantController(Vagrant, Controller):
         # 2. build config
 
         # 3. 
-
         self.vagrant.up()
         self.vagrant.halt()
         #pass
