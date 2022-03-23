@@ -40,7 +40,7 @@
     file:
       path: "{{ item }}"
       state: directory
-    with_times:
+    with_items:
       - /var/run/sshd
       - /root/.ssh
 
@@ -58,7 +58,7 @@
       path: "{{ item.path }}"
       regexp: "{{ item.regexp }}"
       replace: "{{ item.replace }}"
-    with_times:
+    with_items:
       - { 'path':'/etc/ssh/sshd_config', 'regexp':'^#?PermitRootLogin\s+.*', 'replace':'PermitRootLogin yes' }
       - { 'path':'/etc/ssh/sshd_config', 'regexp':'^UsePAM yes', 'replace':'#UsePAM yes' }
       - { 'path':'/etc/ssh/sshd_config', 'regexp':'PasswordAuthentication no', 'replace':'PasswordAuthentication yes' }

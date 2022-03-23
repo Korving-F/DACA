@@ -1,0 +1,41 @@
+# Atomic Red Team
+name: "Atomic Red Team"
+description: |
+  This Scenario sets up Atomic Red Team adversary emulation framework.
+  See also:
+    - https://github.com/redcanaryco/invoke-atomicredteam
+    - https://docs.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.2
+    - https://github.com/redcanaryco/invoke-atomicredteam/wiki/Installing-Atomic-Red-Team
+provisioner: vagrant
+use_default_templates: True
+
+components:
+  - name: atomic_server
+    description: Host on which local Atomic Tests will be run.
+    image: ubuntu/focal64
+    setup:
+      type: shell
+      val: >
+        sudo apt-get update;
+        sudo apt-get install -y wget apt-transport-https software-properties-common;
+        wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb;
+        sudo dpkg -i packages-microsoft-prod.deb;
+        sudo apt-get update;
+        sudo apt-get install -y powershell;
+        pwsh -Command Install-Module -Name invoke-atomicredteam,powershell-yaml -Scope CurrentUser
+
+    run:
+      type: shell
+      val: >
+        "{{ variables.atom.pre_command }}";
+        "{{ variables.atom.run_command }}";
+
+    artifacts_to_collect:
+      - type: files
+        val: ["/var/log/syslog", "/tmp/*.pcap"]
+      - type: cli_recording
+        val: ["/tmp/nmap.cast"]
+
+variables:
+  - atom:
+    - { "technique":"T1030", "pre_command":"dd if=/dev/urandom of=/tmp/test-file bs=25000000 count=1", "run_command":"split -b 5000000 /tmp/test-file" }

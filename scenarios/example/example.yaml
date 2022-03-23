@@ -11,39 +11,35 @@ components:
     image: ubuntu/focal64
     setup:
       type: shell
-      val: |
-        echo "[+] Installing dependencies"
-        sudo apt-get update
-        sudo apt install -y unzip nmap
+      val: >
+        echo "[+] Installing dependencies";
+        sudo apt-get update;
+        sudo apt install -y python2.7 unzip nmap asciinema;
 
-        echo "[+] Installing Vulnerable Web App Gruyère"
-        wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip
-        unzip /tmp/gruyere-code.zip -d /opt/gruyere-code
-
-        echo "[+] Setting up logfile for Vulnerable Web App"
-        sed -i 's/print >>sys.stderr, message/open("\/tmp\/gruyere.log","a+").writelines(list(message))/g' /opt/gruyere-code/gruyere.py
+        echo "[+] Installing Vulnerable Web App Gruyère";
+        wget http://google-gruyere.appspot.com/gruyere-code.zip -O /tmp/gruyere-code.zip;
+        unzip /tmp/gruyere-code.zip -d /opt/gruyere-code;
 
     # Notice the Jinja2 template variable
     run:
       type: shell
-      val: |
-        echo "[+] Run webserver"
-        python2.7 /opt/gruyere-code/gruyere.py &
-        "{{ variables.nmap }}"
-        echo "{{ variables.test }}"
+      val: >
+        echo "[+] Run webserver";
+        set -x;
+        sudo python2.7 /opt/gruyere-code/gruyere.py > /tmp/gruyere.log 2>&1 & sleep 1;
+        "{{ variables.nmap }}";
 
     artifacts_to_collect:
       - type: pcap
-        val:  ["place BPF filter here"]
+        val:  ["tcpdump -i any -n -t -w /tmp/web.pcap port 8008"]
       - type: files
-        val: ["/tmp/gruyere.log"]
+        val: ["/tmp/gruyere.log", "/tmp/*.cast", "/tmp/*.pcap"]
+      - type: cli_recording
+        val: ["/tmp/nmap.cast"]
 
 # These entries are substituted for the Jinja2 tempate variable in the run section.
 variables:
   - nmap:
-    - nmap -sV --script=http-enum 127.0.0.1:8008
+    - nmap -sV -p 8008 --script=http-enum 127.0.0.1
     - nmap -p8008 --script http-waf-detect 127.0.0.1
     - nmap -p8008 --script http-wordpress-users 127.0.0.1
-  - test:
-    - a
-    - b
