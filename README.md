@@ -3,7 +3,7 @@
 [![Pipenv](https://img.shields.io/github/pipenv/locked/python-version/Korving-F/DACA)](https://github.com/pypa/pipenv)
 
 ## Overview
-![](data/simple_example_scenario/runthrough.gif)
+![](data/simple_example_scenario/runthrough8.gif)
 
 ## Quick Start
 
