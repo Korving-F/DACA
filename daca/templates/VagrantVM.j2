@@ -28,6 +28,20 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {% elif setup['type'] == 'script' %}
     {{ hostname }}.vm.provision "shell", path: '{{ setup['val'] }}', privileged: true
     {% endif %}
+    {#- BEGIN FILEBEAT/ELASTIC/KAFKA SECTION #}
+    {%- if artifacts_to_collect -%}
+    {%- for artifact in artifacts_to_collect -%}
+    {% if artifact['type'] == 'filebeat' %}
+    {{ hostname }}.vm.provision "ansible_local" do |a|
+        a.install = true,
+        a.install_mode = "default",
+        a.playbook = "filebeat_playbook",
+        a.become_user = "root",
+        a.become = true
+    end
+    {%- endif  %}
+    {%- endfor %}
+    {%- endif  %}
 
     # Runtime triggers
     {#- BEGIN TCPDUMP SECTION #}
