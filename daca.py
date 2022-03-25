@@ -83,12 +83,10 @@ def run(path, id, workingdir, datapath, interactive):
     logger.debug(f"Storing data at path: {datapath}")
 
     click.echo("[+] Starting execution.")
-    # TODO
-    if interactive == True:
-        click.echo("Run the scenario interactively.")
 
     runner = ScenarioRunner(scenario_path=Path(path).absolute(),
-                            working_directory=Path(workingdir).absolute())
+                            working_directory=Path(workingdir).absolute(),
+                            interactive=interactive)
 
     if id != None:
         runner.set_scenario_by_id(id)
