@@ -41,8 +41,23 @@ class Controller(ABC):
         pass
 
     @abstractmethod
-    def run(self):
+    def run(self, interactive: bool):
         '''
         Run the configuration file.
+        '''
+        pass
+
+    @abstractmethod
+    def interrupt_handler(self):
+        '''
+        Handle a soft shutdown of the scenario when interrupted.
+        This function will also be called in interactive mode.
+        '''
+        pass
+
+    @abstractmethod
+    def print_interactive_mode_instructions(self):
+        '''
+        Print instructions on how to enter the various machines in the scenario.
         '''
         pass

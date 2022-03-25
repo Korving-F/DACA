@@ -2,7 +2,7 @@
 This class takes a scenario description and executes it. 
 '''
 ### System modules ###
-from tracemalloc import Snapshot
+from pydoc import cli
 from typing import Dict, Any
 from datetime import datetime
 import psutil
@@ -11,7 +11,6 @@ import json
 from pathlib import Path
 from pprint import pprint
 import click
-import signal
 
 ### Local modules ###
 from .vagrantcontroller   import VagrantController
@@ -28,7 +27,8 @@ class ScenarioRunner:
     def __init__(self, 
                  scenario_path: Path=None,
                  working_directory: Path=None,
-                 quiet: bool=False
+                 quiet: bool=False,
+                 interactive: bool=False
                 ) -> None:
         self.scenario_path = scenario_path
         self.scenario = None
@@ -37,17 +37,10 @@ class ScenarioRunner:
         self.controller = None
         self.configuration_parser = None
         self.working_directory = working_directory
+        self.interactive = interactive
 
 
     ### STATIC METHODS ###
-    @staticmethod
-    def interrupt_handler():
-        click.echo()
-        response = click.prompt("[!] Ctrl-c was pressed. Do you really want to exit? (y/n)")
-        if response.lower() in ['yes', 'y']:
-            click.echo(f"[!] Exiting scenario execution.")
-            exit(1)
-
     @staticmethod
     def dict_hash(dictionary: Dict[str, Any]) -> str:
         """
@@ -153,6 +146,14 @@ class ScenarioRunner:
             self.controller = DockerController()
         elif controller_type == "terraform":
             self.controller = TerraformController()
+    
+    @property
+    def interactive(self):
+        return self._interactive
+
+    @interactive.setter
+    def interactive(self, interactive: bool):
+        self._interactive = interactive
 
     ### HELPER FUNCTIONS ###
     def set_controller_env_variable(self, var_name, var_value):
@@ -204,14 +205,11 @@ class ScenarioRunner:
         self.scenario.render_scenario()
         self.scenario_rendered = True
 
-        # Registering signal handler for interrupt
-        signal.signal(signal.SIGINT, self.interrupt_handler)
-
         if len(self.scenario.scenario_list) == 0:
             click.echo(f"[!] No valid scenarios found to build. Terminating")
             exit()
 
-        # TODO: add health check for Vagrant version etc.        
+        # TODO: add health check for Vagrant version etc.  
         controller_type = self.scenario.scenario_list[0]['scenario']['provisioner']
         self.controller_type = controller_type
 
@@ -233,6 +231,12 @@ class ScenarioRunner:
         click.echo(f"[+] Memory usage on current system:\n\tTotal: {memory.total // (2**30)} GiB\n\tUsed:  {memory.used // (2**30)} GiB\n\tAvailable:  {memory.available // (2**30)} GiB")
        
         # Confirmation before proceding with runthrough
+        if self.interactive:
+            click.echo()
+            click.echo(f"[+] Running in interactive mode. Please press CTRL-C to interrupt when you're ready to stop.")
+            self.controller.print_interactive_mode_instructions(self.scenario.scenario_list[0], scenario_data_directory)
+            click.echo()
+
         response = click.prompt("[!] Are you sure you want to start running this scenario? (y/n)", confirmation_prompt=False)
         if response.lower() not in ['yes', 'y']:
             click.echo(f"[!] Exiting scenario execution.")
@@ -243,7 +247,6 @@ class ScenarioRunner:
         with click.progressbar(self.scenario.scenario_list) as bar:
             for scenario in bar:
                 click.echo()
-                #print(bar.pos)
                 # Create an artifact directory for a single instance of the scenario 
                 instance_data_directory = Path(f"{scenario_data_directory}/{self.dict_hash(scenario)}").absolute()
                 instance_data_directory.mkdir(parents=True, exist_ok=True)
@@ -258,7 +261,6 @@ class ScenarioRunner:
 
                 with open(instance_data_metadata_file, 'w') as f:
                     f.write(f"execution_time: {datetime.now()}\n\n")
-                    #f.write(f"original_scenario_file: {self.scenario.scenario_path}\n\n")
                     f.write(f"variables: {json.dumps(scenario['variables'])}\n\n")
                     f.write(f"scenario: {json.dumps(scenario['scenario'])}\n\n")
 
@@ -271,31 +273,9 @@ class ScenarioRunner:
                         component_data_directory = Path(f"{instance_data_directory}/{component['name'].strip().lower().replace(' ','').replace('_','')}").absolute()
                         component_data_directory.mkdir(parents=True, exist_ok=True)
 
-
-                # Set CWD for the controller ()
-                #self.set_controller_env_variable('CWD', scenario_data_directory) # instance_data_directory
-                #self.controller.set_env_variable('VAGRANT_CWD', instance_data_directory) # or scenario_data_directory?
-
-                #pprint(scenario)
                 # Let the controller build the needed configurations and validate it.
                 self.controller.build_config(scenario, scenario_data_directory, instance_data_directory, self.scenario.scenario_parent_path)
                 self.controller.validate()
 
                 # Let the controller run the configuration file
-                self.controller.run()
-
-                # Let the controller gather evidence
-                #self.controller.gather_data()
-
-                
-                #if previous_components.setup == current_component.setup:
-                #    self.controller.snapshot_pop()
-                #    self.controller.snapshot_push()
-                #    self.controller.snapshot_save(name="base")
-                #    self.controller.snapshot_restore(name="base")
-
-
-
-                #exit()
-                #click.echo()
-                
+                self.controller.run(self.interactive)

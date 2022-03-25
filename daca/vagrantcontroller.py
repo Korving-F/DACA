@@ -5,14 +5,18 @@ See also:
 * https://pypi.org/project/python-vagrant/
 '''
 ### System modules ###
+from pydoc import cli
 import re
 import os
 import subprocess
 import click
 import shutil
+import signal
 from vagrant import Vagrant
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape, meta
+from threading import Event
+
 
 ### Local modules ###
 from .controller import Controller
@@ -21,15 +25,16 @@ from .controller import Controller
 import logging
 logger = logging.getLogger('daca')
 
+### Setup interrupt ###
+exit_event = Event()
+
 class VagrantController(Vagrant, Controller):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self) -> None:
         logger.debug("Initiating VagrantController")
         if logger.level == 10:
-            print("debug!")
             quiet_stderr = False
             quet_stdout = False
         else:
-            print("not debug")
             quiet_stderr = True
             quet_stdout = True
         self.vagrant = Vagrant(quiet_stderr=quiet_stderr, quiet_stdout=quet_stdout)
@@ -77,11 +82,6 @@ class VagrantController(Vagrant, Controller):
         os_env[env_variable_name] = env_variable_val
         self._vagrant.env = os_env
 
-
-    def something(self):
-        self._vagrant.box_add()
-
-
     def validate(self):
         '''
         Validates the created Vagrantfile.
@@ -99,14 +99,33 @@ class VagrantController(Vagrant, Controller):
 
     def validate_env(self):
         '''
-        Validates the running environment.
+        Validates the running environment. E.g. Vagrant version etc.
         '''
         pass
-
 
     def check_controller_version(self):
         pass
 
+    def interrupt_handler(self, signum, frame):
+        '''
+        Handles a user interrupt during scenario execution so an attempt can be made to have a soft-shutdown.
+        This function is also used for evidence collection in interactive session.
+        '''
+        click.echo()
+        response = click.prompt("[!] Ctrl-c was pressed. Do you really want to exit? (y/n)")
+        if response.lower() in ['yes', 'y']:
+            click.echo(f"[!] Exiting scenario execution.")
+            click.echo(f"[!] Collecting data. Please wait while scenario is being softly shut-down.")
+            self.vagrant.halt()
+            exit_event.set()
+            exit()
+    
+    def print_interactive_mode_instructions(self, config: dict, scenario_dir: Path,):
+        click.echo(f"\t[+] To interact within the scenario please execute the following in a separate shell:")
+        click.echo(f"\t[+] cd {scenario_dir}")
+        for component in config['scenario']['components']:
+            hostname = component['name'].strip().lower().replace(' ','').replace('_','')
+            click.echo(f"\t[+] vagrant ssh {hostname}")
 
     def build_config(self, config: dict, scenario_dir: Path, data_dir: Path, original_dir: Path):
         loader = FileSystemLoader(f"{Path(__file__).parent.absolute()}/templates", encoding='utf8')
@@ -158,12 +177,30 @@ class VagrantController(Vagrant, Controller):
                         shutil.copy(p, scenario_dir)
 
 
-    def run(self):
-        # 1. make sure scenario is down and artifacts are collected through trigger
+    def run(self, interactive: bool):
+        '''
+        Brings up/down the defined VMs and handles interactive session flag.
+        '''
+        # Two approaches are possible:
+        # 1. Snapshot push/pop to restore initial state after.
+        # 2. Simple restarts between scenario executions.
 
-        # 2. build config
+        # The former is more accurate, but adds complexity orchestrating the runthroughs.
+        # The latter has the potentiality to have false artifact buildups (e.g. scenario1 leaves files/log entries that are reported under scenario2)
 
-        # 3. 
+        #if previous_components.setup == current_component.setup:
+        #    self.controller.snapshot_pop()
+        #    self.controller.snapshot_push()
+        #    self.controller.snapshot_save(name="base")
+        #    self.controller.snapshot_restore(name="base")
+
+        # Registering signal handler for interrupt
+        signal.signal(signal.SIGINT, self.interrupt_handler)
+
         self.vagrant.up()
+
+        if interactive:
+            while not exit_event.is_set():
+                exit_event.wait(60)
+
         self.vagrant.halt()
-        #pass
