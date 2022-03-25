@@ -5,7 +5,6 @@ See also:
 * https://pypi.org/project/python-vagrant/
 '''
 ### System modules ###
-from pydoc import cli
 import re
 import os
 import subprocess
@@ -174,7 +173,7 @@ class VagrantController(Vagrant, Controller):
                  for p in original_dir.rglob("*"):
                     if p.name == component["run"]["val"]:
                         shutil.copy(p, data_dir)
-                        shutil.copy(p, scenario_dir)
+                        shutil.copy(p, scenario_dir)      
 
 
     def run(self, interactive: bool):

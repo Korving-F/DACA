@@ -85,7 +85,7 @@ scenario_schema = {
                             'type': {
                                 'type': 'string',
                                 'required': True,
-                                'regex': '^(?i)(pcap|files|mordor|elastic|cli_recording)$'
+                                'regex': '^(?i)(pcap|files|filebeat|kafka|elastic|cli_recording)$'
                             },
                             'val': {
                                 'type': 'list',
