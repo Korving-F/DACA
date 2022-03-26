@@ -31,18 +31,18 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     {#- BEGIN FILEBEAT/ELASTIC/KAFKA SECTION #}
     {%- if artifacts_to_collect -%}
     {%- for artifact in artifacts_to_collect -%}
-    {% if artifact['type'] == 'filebeat' %}
+    {% if artifact['type'] in ['filebeat','kafka','elastic'] %}
     {{ hostname }}.vm.provision "ansible_local" do |a|
         a.install = true,
         a.install_mode = "default",
-        a.playbook = "filebeat_playbook",
+        a.playbook = "filebeat_playbook_{{ hostname }}",
         a.become_user = "root",
         a.become = true
     end
     {%- endif  %}
     {%- endfor %}
     {%- endif  %}
-
+    {#- END FILEBEAT/ELASTIC/KAFKA SECTION #}
     # Runtime triggers
     {#- BEGIN TCPDUMP SECTION #}
     {%- if artifacts_to_collect -%}
@@ -103,14 +103,12 @@ config.vm.define "{{ hostname }}" do |{{ hostname }}|
     end
     {% endfor -%}
     {% endif  %}
-    {%- endfor -%}
+    {%- endfor %}
     {%- endif  %}
     {#-
         # vagrant-scp independent way of scp-ing a file
         trigger.run = {inline: "vagrant ssh-config --host {{ hostname }} > {{ dest_path}}/config_{{ hostname }}.txt"}
         trigger.run = {inline: "scp -F {{ dest_path}}/config_{{ hostname }}.txt {{ hostname }}:{{ file }} {{ dest_path }}"}
     -#}
+
 end
-
-
-

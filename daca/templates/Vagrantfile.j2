@@ -13,5 +13,5 @@ Vagrant.configure({{ vagrant_version|default('"2"') }}) do |config|
 {% for vm in scenario_vms %}
 {{ vm }}
 {%- endfor -%}
-{%- endif -%}
+{%- endif %}
 end

@@ -45,6 +45,11 @@
       vars:
         beat: "filebeat"
         beat_conf:
+          # Enable the following 4 items if a custom index will be used
+          #setup.template.enabled: true
+          #setup.template.name: "daca"
+          #setup.template.pattern: "daca-*"
+          #setup.ilm.enabled: false
           filebeat.inputs:
             {%- for artifact_nested in artifacts_to_collect -%}
             {%- if artifact_nested['type'] == 'files' %}
@@ -64,7 +69,7 @@
           elasticsearch:
             hosts: {{ artifact['val'] }}
             protocol: "http"
-            index: "%{[fields.filename]}-%{+yyyy.MM.dd}"
+            #index: "%{[fields.filename]}-%{+yyyy.MM.dd}"
             # Authentication credentials - either API key or username/password.
             #api_key: "id:api_key"
             #username: "elastic"

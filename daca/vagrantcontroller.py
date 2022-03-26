@@ -145,6 +145,16 @@ class VagrantController(Vagrant, Controller):
             m = template.render(component_dict)
             vm_dict['scenario_vms'].append(m)
 
+            # Render and write filebeat playbook(s). NB! These conflict with each other and only one should be used (1 output for filebeat only)
+            for artifact in component["artifacts_to_collect"]: 
+                if artifact['type'] in ["filebeat","elastic","kafka"]:
+                    template = self.jinja_env.get_template('filebeat_playbook.j2')
+                    m = template.render(component_dict)
+                    with open(f"{scenario_dir}/filebeat_playbook_{component_dict['hostname']}", "w") as f:
+                        f.write(m)
+                    with open(f"{data_dir}/filebeat_playbook_{component_dict['hostname']}", "w") as f:
+                        f.write(m)
+
         
         # Grab the Vagrant template, render it and write to data / scenario directories
         template = self._jinja_env.get_template('Vagrantfile.j2')
@@ -173,8 +183,8 @@ class VagrantController(Vagrant, Controller):
                  for p in original_dir.rglob("*"):
                     if p.name == component["run"]["val"]:
                         shutil.copy(p, data_dir)
-                        shutil.copy(p, scenario_dir)      
-
+                        shutil.copy(p, scenario_dir)
+        
 
     def run(self, interactive: bool):
         '''
