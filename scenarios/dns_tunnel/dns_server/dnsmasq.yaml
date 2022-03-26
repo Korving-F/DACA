@@ -5,8 +5,7 @@ image: ubuntu/focal64
 ipv4_address: 192.168.0.10
 setup:
   type: shell
-  val: |-
-    apt-get update; sudo DEBIAN_FRONTEND=noninteractive apt-get install -y dnsmasq; systemctl stop systemd-resolved; systemctl disable systemd-resolved; echo -e "log-queries\nlog-facility=/var/log/dnsmasq.log\nno-resolv\nserver=9.9.9.9\nserver=8.8.8.8\nserver=/attack/192.168.0.20\nstrict-order\n" > /etc/dnsmasq.conf
+  val: dnsmasq.bash
 run:
   type: shell
   val: systemctl restart dnsmasq
@@ -16,7 +15,3 @@ artifacts_to_collect:
     val: ["tcpdump -i any -n -t -w /tmp/dns.pcap port 53"]
   - type: files
     val: ["/var/log/dnsmasq.log", "/tmp/dns.pcap"]
-  #- type: mordor
-  #  val: ["/var/log/bind9.log"]
-  #- type: elastic
-  #  val: ["hostname:port"]
