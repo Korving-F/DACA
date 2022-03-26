@@ -36,6 +36,8 @@ components:
         val: ["/tmp/gruyere.log", "/tmp/*.cast", "/tmp/*.pcap"]
       - type: cli_recording
         val: ["/tmp/nmap.cast"]
+      - type: elastic
+        val: ["192.168.1.248:9200"]
 
 # These entries are substituted for the Jinja2 tempate variable in the run section.
 variables:
