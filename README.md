@@ -11,7 +11,8 @@
 * [Writing Scenarios](#writing-scenarios)
     * [Single file](#simple-single-file-scenario)
     * [Multi-component](#multi-component-scenario)
-* [Architecture](#architecture)  
+* [Architecture](#architecture)
+* [Data Sets](#data-sets)  
 * [Future Development](#future-development)  
 * [Run Tests](#run-tests)  
 
@@ -19,18 +20,19 @@
 ![](data/simple_example_scenario/runthrough.gif)
 
 ## Requirements
-This project was created and tested using `python3.8`
+This project was created and tested using `python3.8`.
 In addition to dependencies installable through pipenv one needs local installations of 
 
 * [![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)](https://www.vagrantup.com/)
-
 * [![VirtualBox](https://img.shields.io/static/v1?style=for-the-badge&message=VirtualBox&color=183A61&logo=VirtualBox&logoColor=FFFFFF&label=)](https://www.virtualbox.org/)
+![VMware](https://img.shields.io/static/v1?style=for-the-badge&message=VMware&color=607078&logo=VMware&logoColor=FFFFFF&label=)
+
 * [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/)
 * [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/)
 
 ## Installation
 This project uses pipenv for dependency management.
-Installation instructions can be found [here](https://github.com/pypa/pipenv#installation).
+Installation instructions can also be found [here](https://github.com/pypa/pipenv#installation).
 ```bash
 pip3 install pipenv
 pipenv install
@@ -53,17 +55,17 @@ Each component has 2 main sections:
 The Setup phase builds/snapshots the VMs or Docker containers, initializing the Scenario.
 The run section is evaluated on Scenario execution.
 
-In the background network traffic can be captured as well as logs can be streamed to a Kafka broker or Elasticsearch cluster.
-Raw logs or other artifacts can be gathered as well.
+In the background network traffic can be captured and logs can be streamed to a Kafka broker or Elasticsearch cluster.
+Raw logs or other artifacts can be gathered after-the-fact as well.
 
-Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/) files 
+Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/) files which allow for 
 
 ### Simple, single-file scenario
 <details>
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
 It collects a tcpdump, raw log file and a <a href="https://asciinema.org/">asciinema</a> terminal session recording as artifacts.
-`DACA` also writes all needed files to reproduce the scenario to a dedicated directory.
-See also <a href="https://github.com/Korving-F/DACA/tree/main/data/simple_example_scenario">here</a> for the data of this particular example.</summary>
+The tool also writes all needed files to reproduce the scenario to a dedicated directory.
+See also <a href="https://github.com/Korving-F/DACA/tree/main/data/simple_example_scenario">here</a> for the output of this particular example.</summary>
 <p>
 
 ```yaml
@@ -137,6 +139,8 @@ scenarios/
 
 
 ## Architecture
+
+## Data Sets
 
 ## Future Development
 Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.
