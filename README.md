@@ -6,10 +6,8 @@
 ## Overview
 ![](data/simple_example_scenario/runthrough.gif)
 
-## Quick Start
-
 ## Requirements
-This project was created and tested using `python3.8`  
+This project was created and tested using `python3.8`
 In addition to dependencies installable through pipenv one needs local installations of 
 
 * [![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)](https://www.vagrantup.com/)
@@ -26,7 +24,7 @@ Installation instructions can be found [here](https://github.com/pypa/pipenv#ins
 pip3 install pipenv
 pipenv install
 ```
-
+The `vagrant-scp` module is used to collect data from VMs and needs to be installed as well:
 ```bash
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-scp
@@ -44,25 +42,9 @@ Each component has 2 main sections:
 Setup phase builds/snapshots the VMs or Docker containers, initializing the Scenario.
 The run section is evaluated on Scenario execution.
 
-In the background network traffic can be captured as well as logs can be streamed to a kafka broker.
+In the background network traffic can be captured as well as logs can be streamed to a Kafka broker or Elasticsearch cluster.
 Raw logs or other artifacts can be gathered as well.
 
-### Multi-component scenario
-```bash
-scenarios/
-├── web_attack_scenario           # Multi-component scenario.
-│   ├── web_attack_scenario.yaml  # Main scenario file (same name as parent directory)
-│   ├── component_webserver       # First webserver component with 2 instances.
-│   │   ├── httpd.yaml            # 
-│   │   ├── httpd_playbook        # Anisble playbook to provision httpd
-│   │   ├── nginx.yaml            # 
-│   │   └── nginx.bash            # Script to provision nginx
-│   └── component_scanner         # Second component with two scanner subcomponents.
-│       ├── nmap.yaml             # 
-│       └── wpscan.yaml           # 
-└── simple_scenario               # Single component scenario contained in a single file. 
-    └── simple_scenario.yaml      # See below for a working example.
-```
 
 ### Simple, single-file scenario
 <details>
@@ -121,11 +103,30 @@ variables:
 </p>
 </details>
 
+### Multi-component scenario
+```bash
+scenarios/
+├── web_attack_scenario           # Multi-component scenario.
+│   ├── web_attack_scenario.yaml  # Main scenario file (same name as parent directory)
+│   ├── component_webserver       # First webserver component with 2 instances.
+│   │   ├── httpd.yaml            # 
+│   │   ├── httpd_playbook        # Anisble playbook to provision httpd
+│   │   ├── nginx.yaml            # 
+│   │   └── nginx.bash            # Script to provision nginx
+│   └── component_scanner         # Second component with two scanner subcomponents.
+│       ├── nmap.yaml             # 
+│       └── wpscan.yaml           # 
+└── simple_scenario               # Single component scenario contained in a single file. 
+    └── simple_scenario.yaml      # See below for a working example.
+```
+
+
+
 
 ## Architecture
 
 ## Future Development
-Many scenarios lend themselves to also be run on Docker (faster) while they could also be extended into the cloud through Terraform (AWS, Google, Azure).  
+Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of entirely different datasets.
 * [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
 * [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
