@@ -4,17 +4,22 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Korving-F/daca)](https://github.com/Korving-F/DACA)
 
 
-##### Table of Contents  
-[Headers](#headers)  
-[Emphasis](#emphasis)  
-...snip...    
-<a name="headers"/>
-## Headers
+## Table of Contents
+* [Overview](#overview)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Writing Scenarios](#writing_scenarios)
+    * [Single file](#single_file)
+    * [Multi-component](#multi_component)
+* [Architecture](#architecture)  
+* [Future Development](#future_development)  
+* [Run Tests](#run_tests)  
 
-
+<a name="overview"/>
 ## Overview
 ![](data/simple_example_scenario/runthrough.gif)
 
+<a name="requirements"/>
 ## Requirements
 This project was created and tested using `python3.8`
 In addition to dependencies installable through pipenv one needs local installations of 
@@ -25,7 +30,7 @@ In addition to dependencies installable through pipenv one needs local installat
 * [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/)
 * [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/)
 
-
+<a name="installation"/>
 ## Installation
 This project uses pipenv for dependency management.
 Installation instructions can be found [here](https://github.com/pypa/pipenv#installation).
@@ -39,6 +44,7 @@ vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-scp
 ```
 
+<a name="writing_scenarios"/>
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
 Scenario files are found when they have the same name as their scenario directory.
@@ -56,7 +62,7 @@ Raw logs or other artifacts can be gathered as well.
 
 Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/) files 
 
-
+<a name="single_file"/>
 ### Simple, single-file scenario
 <details>
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
@@ -114,6 +120,7 @@ variables:
 </p>
 </details>
 
+<a name="multi_component"/>
 ### Multi-component scenario
 ```bash
 scenarios/
@@ -133,14 +140,16 @@ scenarios/
 
 
 
-
+<a name="architecture"/>
 ## Architecture
 
+<a name="future_development"/>
 ## Future Development
 Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of entirely different datasets.
 * [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
 * [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
+<a name="tests"/>
 ## Run Tests
 ```bash
 python -m pytest
