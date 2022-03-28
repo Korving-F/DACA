@@ -24,8 +24,10 @@ DACA is a
 ## Requirements
 This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install it's main dependencies:
 ```bash
+# Install pipenv
 pip3 install pipenv
 
+# Install project's dependencies
 git clone git@github.com:Korving-F/DACA.git
 cd DACA
 pipenv install
