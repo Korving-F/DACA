@@ -61,7 +61,9 @@ Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/
 ### Simple, single-file scenario
 <details>
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
-It collects a tcpdump, raw log file and a <a href="https://asciinema.org/">asciinema</a> terminal session recording as artifacts.</summary>
+It collects a tcpdump, raw log file and a <a href="https://asciinema.org/">asciinema</a> terminal session recording as artifacts.
+`DACA` also writes all needed files to reproduce the scenario to a dedicated directory.
+See also <a href="https://github.com/Korving-F/DACA/tree/main/data/simple_example_scenario">here</a> for the data of this particular example.</summary>
 <p>
 
 ```yaml
