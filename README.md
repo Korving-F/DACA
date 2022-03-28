@@ -18,7 +18,7 @@
 * [License](#license)  
 
 ## Overview
-DACA is a configurable, automated testbed focused on spinning up servers/services, attacking them, recording log/network data and extracting these artifacts.
+DACA is a configurable, automated testbed focused on spinning up servers/services, attacking them, recording log/network data and extracting any desired artifacts.
 The collected artifacts can then be used to tune detection rules or for educational purposes.
 
 ## Requirements
@@ -158,11 +158,11 @@ scenarios/
 
 ## Future Development
 1. Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.  
-[![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
+[![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (#24) [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (#11) 
 
-2. Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used. [![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)  (Not yet supported #31)
+2. Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used. [![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)  (#31)
 
-3. Currently all components are assumed to be running on Linux, which should be expanded with [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) (Not yet supported #32)
+3. Currently all components are assumed to be running on Linux, which should be expanded with [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) (#32)
 
 ## Run Tests
 ```bash
