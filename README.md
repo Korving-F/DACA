@@ -19,7 +19,7 @@
 
 ## Overview
 DACA is a configurable, automated testbed focused on spinning up servers/services, attacking them, recording log/network data and extracting these artifacts.
-
+The collected artifacts can then be used to tune detection rules or for educational purposes.
 
 ## Requirements
 This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install it's main dependencies:
