@@ -6,7 +6,7 @@
   tasks:
 
     - name: Install all galaxy roles
-      shell: ansible-galaxy install elastic.beats,v7.17.0
+      shell: ansible-galaxy install elastic.beats,v7.17.0 --roles-path="/etc/ansible/roles"
 
     {% for artifact in artifacts_to_collect -%}
     {% if artifact['type'] == 'filebeat' %}
