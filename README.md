@@ -125,6 +125,7 @@ variables:
 ## Architecture
 
 ## Future Development
+Many scenarios lend themselves to also be run on Docker (faster) while they could also be extended into the cloud through Terraform (AWS, Google, Azure).  
 * [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
 * [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
