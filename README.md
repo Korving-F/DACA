@@ -18,7 +18,7 @@
 * [License](#license)  
 
 ## Overview
-DACA is a testbed 
+DACA is a configurable, automated testbed focused on spinning up servers/services, attacking them, recording log/network data and extracting these artifacts.
 
 
 ## Requirements
