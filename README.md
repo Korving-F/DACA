@@ -46,8 +46,10 @@ If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1
 ## Usage
 
 ```bash
-pipenv shell
-python3 daca.py...
+pipenv shell                        # Enter virtualenv
+python3 daca.py --help              # Show supported commands
+python3 daca.py info --list         # List available scenarios
+python3 daca.py run -d data/ --id 2 # Run scenario with ID 2 and store collected data in ./data/ directory 
 ```
 
 ## Writing Scenarios
