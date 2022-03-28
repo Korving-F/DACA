@@ -149,6 +149,8 @@ scenarios/
 
 ## Architecture
 
+![](images/architecture.svg)
+
 ## Data Sets
 1. [DNS Tunnelling Dataset](https://github.com/Korving-F/dns-tunnel-dataset) - Investigates multiple popular DNS servers and publicly available DNS Tunnel utilities.
 2. 
