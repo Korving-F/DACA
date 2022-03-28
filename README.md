@@ -145,11 +145,11 @@ scenarios/
 ## Data Sets
 
 ## Future Development
-Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.
+1. Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.
 * [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
 * [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
-Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used.
+2. Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used.
 * [![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)  (Not yet supported #31)
 
 ## Run Tests
