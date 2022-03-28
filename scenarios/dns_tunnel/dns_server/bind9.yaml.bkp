@@ -14,4 +14,6 @@ artifacts_to_collect:
   - type: pcap
     val: ["tcpdump -i any -s 0 -n -w /tmp/dns.pcap port 53"]
   - type: files
-    val: ["/var/cache/bind/query*.log", "/tmp/dns.pcap"]
+    val: ["/var/cache/bind/query.log", "/var/cache/bind/query-errors.log", "/tmp/dns.pcap"]
+  - type: elastic
+    val: ["192.168.1.248:9200"]

@@ -35,8 +35,6 @@
       owner: root
       group: bind
 
-  
-
   - name: Copy over bind9 configuration file
     blockinfile:
       path: /etc/bind/named.conf
@@ -45,7 +43,7 @@
         // Main options including querylog enabling
         options {
                 directory "/var/cache/bind";
-                dnssec-validation auto;
+                dnssec-validation no;
 
                 listen-on-v6 { any; };
 
@@ -56,10 +54,10 @@
         };
 
         // Forwarding zone for malicious DNS server
-        zone "attack.example.com" {
+        zone "example.attack" {
             type forward;
             forward only;
-            forwarders { 192.168.10.10; };
+            forwarders { 192.168.0.20; };
         };
 
         // BIND9 logging template

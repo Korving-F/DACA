@@ -18,19 +18,13 @@
         beat: "filebeat"
         beat_conf:
           filebeat.inputs:
-            {%- for artifact_nested in artifacts_to_collect -%}
-            {%- if artifact_nested['type'] == 'files' %}
-            {%- for file in artifact_nested['val'] -%}
-            {%- if not '.cast' in file and not '.pcap' in file %}
+            {%- for file in artifact['val'] -%}
             - type: filestream
               enabled: true
               paths:
                 - "{{ file }}"
               fields:
                 filename: "{{ file.split('/')[-1] }}"
-            {% endif -%}
-            {% endfor -%}
-            {% endif -%}
             {% endfor %}
         output_conf:
           file:
