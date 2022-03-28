@@ -7,6 +7,7 @@
 ## Table of Contents
 * [Overview](#overview)
 * [Requirements](#requirements)
+* [Requirements](#usage)
 * [Writing Scenarios](#writing-scenarios)
     * [Single file](#simple-single-file-scenario)
     * [Multi-component](#multi-component-scenario)
@@ -14,8 +15,10 @@
 * [Data Sets](#data-sets)  
 * [Future Development](#future-development)  
 * [Run Tests](#run-tests)  
+* [Run Tests](#license)  
 
 ## Overview
+DACA is a 
 ![](data/simple_example_scenario/runthrough.gif)
 
 ## Requirements
@@ -37,13 +40,7 @@ as well as one of it's providers: [![VirtualBox](https://img.shields.io/static/v
 
 If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/) or [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/) outputs you need to install these solutions yourself and make them reachable over the network. By default no authentication is configured and all communications are done over plain-text protocols. To change this one has to update the [filebeat ansible playbook](https://github.com/Korving-F/DACA/blob/main/daca/templates/filebeat_playbook.j2).
 
-## Installation
-This project uses pipenv for dependency management.
-.
-
-Installation instructions can also be found 
-
-
+## Usage
 
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
@@ -152,9 +149,13 @@ scenarios/
 2. Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used.  
 [![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)  (Not yet supported #31)
 
-3. [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)
+3. [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) (Not yet supported #32)
 
 ## Run Tests
 ```bash
 python -m pytest
 ```
+
+## License
+DACA is licensed under the [MIT](#) license.  
+Copyright &copy; 2022, Frank Korving
