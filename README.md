@@ -18,8 +18,8 @@
 * [License](#license)  
 
 ## Overview
-DACA is a 
-![](data/simple_example_scenario/runthrough.gif)
+DACA is a testbed 
+
 
 ## Requirements
 This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install it's main dependencies:
@@ -44,13 +44,13 @@ as well as one of it's providers to actually run the VMs: [![VirtualBox](https:/
 If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/) or [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/) outputs you need to install these solutions yourself and make them reachable over the network. By default no authentication is configured and all communications are done over plain-text protocols. To change this one has to update the [filebeat ansible playbook](https://github.com/Korving-F/DACA/blob/main/daca/templates/filebeat_playbook.j2).
 
 ## Usage
-
 ```bash
 pipenv shell                        # Enter virtualenv
 python3 daca.py --help              # Show supported commands
 python3 daca.py info --list         # List available scenarios
 python3 daca.py run -d data/ --id 2 # Run scenario with ID 2 and store collected data in ./data/ directory 
 ```
+![](data/simple_example_scenario/runthrough.gif)
 
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
@@ -150,6 +150,9 @@ scenarios/
 ## Architecture
 
 ## Data Sets
+1. [DNS Tunnelling Dataset](https://github.com/Korving-F/dns-tunnel-dataset) - Investigates multiple popular DNS servers and publicly available DNS Tunnel utilities.
+2. 
+3. 
 
 ## Future Development
 1. Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.  
