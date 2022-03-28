@@ -12,8 +12,8 @@
     * [Single file](#simple-single-file-scenario)
     * [Multi-component](#multi-component-scenario)
 * [Architecture](#architecture)  
-* [Future Development](#future_development)  
-* [Run Tests](#run_tests)  
+* [Future Development](#future-development)  
+* [Run Tests](#run-tests)  
 
 ## Overview
 ![](data/simple_example_scenario/runthrough.gif)
