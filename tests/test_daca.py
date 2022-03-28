@@ -1,6 +1,6 @@
 import pytest
 
-from daca.daca import Something
+import daca
 
 
 def test_daca_creation():
