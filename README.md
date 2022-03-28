@@ -61,7 +61,7 @@ Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/
 ### Simple, single-file scenario
 <details>
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
-It collects a tcpdump, raw log file and a [asciinema](https://asciinema.org/) terminal session recording as artifacts.</summary>
+It collects a tcpdump, raw log file and a <a href="https://asciinema.org/">asciinema</a> terminal session recording as artifacts.</summary>
 <p>
 
 ```yaml
@@ -137,7 +137,7 @@ scenarios/
 ## Architecture
 
 ## Future Development
-Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of entirely different datasets.
+Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.
 * [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
 * [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
