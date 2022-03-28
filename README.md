@@ -125,8 +125,8 @@ variables:
 ## Architecture
 
 ## Future Development
-* Docker / Docker-Compose (Not yet supported #24) [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-* Terraform (Not yet supported #11) [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/)
+* [![Docker](https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (Not yet supported #24) 
+* [![Terraform](https://img.shields.io/static/v1?style=for-the-badge&message=Terraform&color=7B42BC&logo=Terraform&logoColor=FFFFFF&label=)](https://www.terraform.io/) (Not yet supported #11) 
 
 ## Run Tests
 ```bash
