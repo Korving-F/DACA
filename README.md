@@ -31,25 +31,27 @@ vagrant plugin install vagrant-scp
 ```
 
 ## Writing Scenarios
-Out-of-the-box scenarios are listed within the `./scenarios` directory.
+Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
 Scenario files are found when they have the same name as their scenario directory.
 
-Scenarios consist of components, the simplest type of Scenario has only a single one.
+Scenarios consist of components, the simplest type of Scenario has only a single component.
 Each component has 2 main sections:
-1. **setup**: this contains installation / configuration steps.
+1. **setup**: this contains installation / provisioning steps.
 2. **run**: this contains runtime commands.
 
-Setup phase builds/snapshots the VMs or Docker containers, initializing the Scenario.
+The Setup phase builds/snapshots the VMs or Docker containers, initializing the Scenario.
 The run section is evaluated on Scenario execution.
 
 In the background network traffic can be captured as well as logs can be streamed to a Kafka broker or Elasticsearch cluster.
 Raw logs or other artifacts can be gathered as well.
 
+Scenario files are interpreted as [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/) files 
+
 
 ### Simple, single-file scenario
 <details>
 <summary>This scenario sets up a vulnerable webapp and runs some nmap scans against it.
-It collects a tcpdump, raw log file and a shell recording as artifacts.</summary>
+It collects a tcpdump, raw log file and a [asciinema](https://asciinema.org/) terminal session recording as artifacts.</summary>
 <p>
 
 ```yaml
