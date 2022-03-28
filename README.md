@@ -7,7 +7,6 @@
 ## Table of Contents
 * [Overview](#overview)
 * [Requirements](#requirements)
-* [Installation](#installation)
 * [Writing Scenarios](#writing-scenarios)
     * [Single file](#simple-single-file-scenario)
     * [Multi-component](#multi-component-scenario)
@@ -20,19 +19,7 @@
 ![](data/simple_example_scenario/runthrough.gif)
 
 ## Requirements
-This project was created and tested using `python3.8`.
-In addition to dependencies installable through pipenv one needs local installation of:
-
-Provisioner:
-* [![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)](https://www.vagrantup.com/)
-* [![VirtualBox](https://img.shields.io/static/v1?style=for-the-badge&message=VirtualBox&color=183A61&logo=VirtualBox&logoColor=FFFFFF&label=)](https://www.virtualbox.org/)
-![VMware](https://img.shields.io/static/v1?style=for-the-badge&message=VMware&color=607078&logo=VMware&logoColor=FFFFFF&label=)
-
-If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/) or [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/) outputs you need to install these solutions yourself and make them reachable over the network. By default no authentication is configured and all communications are done over plain-text protocols. To change this one has to update the [filebeat ansible playbook](https://github.com/Korving-F/DACA/blob/main/daca/templates/filebeat_playbook.j2).
-
-## Installation
-This project uses pipenv for dependency management.
-Installation instructions can also be found [here](https://github.com/pypa/pipenv#installation).
+This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install dependencies:
 ```bash
 pip3 install pipenv
 pipenv install
@@ -42,6 +29,19 @@ The `vagrant-scp` module is used to collect data from VMs and needs to be instal
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-scp
 ```
+
+In addition one needs local installations of [![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)](https://www.vagrantup.com/)
+and a Vagrant provider like [![VirtualBox](https://img.shields.io/static/v1?style=for-the-badge&message=VirtualBox&color=183A61&logo=VirtualBox&logoColor=FFFFFF&label=)](https://www.virtualbox.org/) (tested) or [![VMware Fusion / VMWare Workstation](https://img.shields.io/static/v1?style=for-the-badge&message=VMware&color=607078&logo=VMware&logoColor=FFFFFF&label=)](https://www.vagrantup.com/docs/providers/vmware)
+
+If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/) or [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/) outputs you need to install these solutions yourself and make them reachable over the network. By default no authentication is configured and all communications are done over plain-text protocols. To change this one has to update the [filebeat ansible playbook](https://github.com/Korving-F/DACA/blob/main/daca/templates/filebeat_playbook.j2).
+
+## Installation
+This project uses pipenv for dependency management.
+.
+
+Installation instructions can also be found 
+
+
 
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
