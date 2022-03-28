@@ -15,18 +15,19 @@
 * [Data Sets](#data-sets)  
 * [Future Development](#future-development)  
 * [Run Tests](#run-tests)  
-* [Run Tests](#license)  
+* [License](#license)  
 
 ## Overview
 DACA is a 
 ![](data/simple_example_scenario/runthrough.gif)
 
 ## Requirements
-This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install dependencies:
+This project requires [pipenv](https://github.com/pypa/pipenv#installation) to install it's main dependencies:
 ```bash
+pip3 install pipenv
+
 git clone git@github.com:Korving-F/DACA.git
 cd DACA
-pip3 install pipenv
 pipenv install
 ```
 The `vagrant-scp` module is used to collect data from VMs and needs to be installed as well:
@@ -36,11 +37,16 @@ vagrant plugin install vagrant-scp
 ```
 
 In addition one needs a local installation of [![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)](https://www.vagrantup.com/)
-as well as one of it's providers to actually run the VMs: [![VirtualBox](https://img.shields.io/static/v1?style=for-the-badge&message=VirtualBox&color=183A61&logo=VirtualBox&logoColor=FFFFFF&label=)](https://www.virtualbox.org/) or [![VMware Fusion / VMWare Workstation](https://img.shields.io/static/v1?style=for-the-badge&message=VMware&color=607078&logo=VMware&logoColor=FFFFFF&label=)](https://www.vagrantup.com/docs/providers/vmware)
+as well as one of it's providers to actually run the VMs: [![VirtualBox](https://img.shields.io/static/v1?style=for-the-badge&message=VirtualBox&color=183A61&logo=VirtualBox&logoColor=FFFFFF&label=)](https://www.virtualbox.org/) or [![VMware Fusion / VMWare Workstation](https://img.shields.io/static/v1?style=for-the-badge&message=VMware&color=607078&logo=VMware&logoColor=FFFFFF&label=)](https://www.vagrantup.com/docs/providers/vmware).
 
 If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1?style=for-the-badge&message=Apache+Kafka&color=231F20&logo=Apache+Kafka&logoColor=FFFFFF&label=)](https://kafka.apache.org/) or [![Elasticsearch](https://img.shields.io/static/v1?style=for-the-badge&message=Elasticsearch&color=005571&logo=Elasticsearch&logoColor=FFFFFF&label=)](https://www.elastic.co/) outputs you need to install these solutions yourself and make them reachable over the network. By default no authentication is configured and all communications are done over plain-text protocols. To change this one has to update the [filebeat ansible playbook](https://github.com/Korving-F/DACA/blob/main/daca/templates/filebeat_playbook.j2).
 
 ## Usage
+
+```bash
+pipenv shell
+python3 daca.py...
+```
 
 ## Writing Scenarios
 Out-of-the-box scenarios are listed within the `./scenarios` directory and can be used as a reference.
@@ -149,10 +155,14 @@ scenarios/
 2. Currently the [local Anisble provisioner](https://www.vagrantup.com/docs/provisioning/ansible_local) is used to initialize VMs, which installs / runs Ansible from within the VM. However ideally an installation on the Host is used.  
 [![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)  (Not yet supported #31)
 
-3. [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) (Not yet supported #32)
+3. Currently all components are assumed to be running on Linux, which should be expanded with [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) (Not yet supported #32)
 
 ## Run Tests
 ```bash
+# Install pytest and other packages helpful for debugging
+pipenv install --dev
+
+# Run any tests
 python -m pytest
 ```
 
