@@ -1,0 +1,47 @@
+dns_attack_server:
+    name: dnscat_server
+    image: ubuntu/focal64
+    ipv4_address: 192.168.0.20
+    description: |
+      This sets up the DNSCat2 server.
+    setup:
+        type: ansible
+        val: 
+    run:
+        type: shell
+        val: |-
+          
+    artifacts_to_collect:
+      - type: files
+        val: ["/tmp/*.cast"]
+
+dns_attack_client:
+    name: dnscat_client
+    image: ubuntu/focal64
+    ipv4_address: 192.168.0.30
+    description: |
+      This sets up the DNSCat2 client.
+    setup:
+      type: script
+      val: 
+    run:
+        type: shell
+        val: |-
+          
+
+    artifacts_to_collect:
+      - type: files
+        val: ["/tmp/*.cast"]
+      - type: cli_recording
+        val: ["/tmp/iodine_client_{{ variables.record_type }}_{{ variables.encoding }}_{{ variables.passphrase }}.cast"]
+
+    variables:
+        - record_type: ["null", "srv", "cname", "txt", "private", "mx", "a"]
+        - encoding: ["raw", "base32", "base64", "base128"]
+        - passphrase: ["0xDEADBEEF"]
+
+
+
+
+
+git clone https://github.com/iagox86/dnscat2.git

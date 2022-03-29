@@ -9,13 +9,12 @@ setup:
 run:
   type: shell
   val: >-
-    sudo systemctl stop systemd-resolved;
-    sudo /opt/coredns/coredns -conf /opt/coredns/Corefile > /tmp/coredns.log 2>&1 & sleep 1;
+    sudo systemctl restart pdns-recursor;
 
 artifacts_to_collect:
   - type: pcap
     val: ["tcpdump -i any -s 0 -n -w /tmp/dns.pcap port 53"]
   - type: files
-    val: ["/tmp/coredns.log", "/tmp/dns.pcap", "/tmp/filebeat.json"]
+    val: ["/var/log/pdns.log", "/tmp/dns.pcap", "/tmp/filebeat.json"]
   - type: filebeat
-    val: ["/tmp/coredns.log"]
+    val: ["/var/log/pdns.log"]
