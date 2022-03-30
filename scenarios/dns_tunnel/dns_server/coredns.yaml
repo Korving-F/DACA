@@ -16,6 +16,6 @@ artifacts_to_collect:
   - type: pcap
     val: ["tcpdump -i any -s 0 -n -w /tmp/dns.pcap port 53"]
   - type: files
-    val: ["/tmp/coredns.log", "/tmp/filebeat.json*" "/tmp/dns.pcap"]
+    val: ["/tmp/coredns.log", "/tmp/filebeat.json*", "/tmp/dns.pcap"]
   - type: filebeat
     val: ["/tmp/coredns.json"]
