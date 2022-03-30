@@ -3,46 +3,14 @@
 - hosts: all
   become: yes
   tasks:
-  - name: Install packages needed for IODINE Server
+  - name: Install packages needed for DNS2TCP Server
     apt:
       update_cache: yes
       name:
-        - git
-        - make
-        - build-essential
-        - pkg-config
-        - zlib1g-dev
-        - net-tools
-        - openssh-server
-        - iputils-ping
-        - netcat 
-        - dnsutils
+        - dns2tcp
         - libtext-lorem-perl 
-        - sshpass 
         - asciinema
       state: latest
-
-  - name: Git checkout of IODINE repo
-    git:
-      repo: 'https://github.com/yarrick/iodine.git'
-      dest: /opt/iodine
-
-  - name: Build the default target for IODINE
-    make:
-      chdir: /opt/iodine
-
-  - name: Build the install target for IODINE
-    make:
-      chdir: /opt/iodine
-      target: install
-
-  - name: Creates needed directories
-    file:
-      path: "{{ item }}"
-      state: directory
-    with_items:
-      - /var/run/sshd
-      - /root/.ssh
 
   - name: Change password
     shell: echo "root:root" | chpasswd
@@ -52,6 +20,29 @@
     args:
       chdir: /root
       creates: test-file
+
+  - name: Make sure target dir exists
+    ansible.builtin.file:
+      path: /var/empty/dns2tcp/
+      state: directory
+
+  - name: Make sure dns2tcp conf exists
+    ansible.builtin.file:
+      path: /opt/dns2tcpdrc
+      state: touch
+
+  - name: Copy over DNS2TCP configuration file
+    blockinfile:
+      path: /opt/dns2tcpdrc
+      marker: "# {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        listen = 192.168.0.20
+        port = 53
+        user = nobody
+        key = 0xDEADBEEF
+        chroot = /var/empty/dns2tcp/
+        domain = example.attack
+        resources = ssh:127.0.0.1:22, smtp:127.0.0.1:25, pop3:127.0.0.1:110, socat:127.0.0.1:1337
 
   - name: Change sshd config to allow for password-based login for root
     ansible.builtin.replace:
