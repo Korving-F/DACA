@@ -279,3 +279,7 @@ class ScenarioRunner:
 
                 # Let the controller run the configuration file
                 self.controller.run(self.interactive)
+
+                # Create finished metadata file
+                with open(instance_data_ready_file, 'w') as f:
+                    f.write(f"finished_time: {datetime.now()}")
