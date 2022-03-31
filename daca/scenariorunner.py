@@ -2,7 +2,6 @@
 This class takes a scenario description and executes it. 
 '''
 ### System modules ###
-from pydoc import cli
 from typing import Dict, Any
 from datetime import datetime
 import psutil

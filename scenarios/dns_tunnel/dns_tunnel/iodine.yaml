@@ -36,6 +36,6 @@ dns_attack_client:
         val: ["/tmp/iodine_client_{{ variables.record_type }}_{{ variables.encoding }}_{{ variables.passphrase }}.cast"]
 
     variables:
-        - record_type: ["null", "srv", "cname", "txt", "private", "mx", "a"]
+        - record_type: ["null", "srv", "cname", "txt", "private", "mx"]
         - encoding: ["raw", "base32", "base64", "base128"]
         - passphrase: ["0xDEADBEEF"]

@@ -2,11 +2,8 @@
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y dnsmasq
 
-systemctl stop systemd-resolved
-systemctl disable systemd-resolved
-
 DNS_SERVER="192.168.0.20"
-cat << EOF > dnsmasq.conf
+cat << EOF > /etc/dnsmasq.conf
 log-queries
 log-facility=/var/log/dnsmasq.log
 no-resolv

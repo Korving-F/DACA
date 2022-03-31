@@ -152,7 +152,6 @@ scenarios/
 
 
 ## Architecture
-
 ![](images/architecture.svg)
 
 ## Data Sets

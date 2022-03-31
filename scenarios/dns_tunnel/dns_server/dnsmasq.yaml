@@ -4,11 +4,13 @@ description: |
 image: ubuntu/focal64
 ipv4_address: 192.168.0.10
 setup:
-  type: shell
+  type: script
   val: dnsmasq.bash
 run:
   type: shell
-  val: systemctl restart dnsmasq
+  val: >-
+    systemctl stop systemd-resolved;
+    systemctl restart dnsmasq;
 
 artifacts_to_collect:
   - type: pcap

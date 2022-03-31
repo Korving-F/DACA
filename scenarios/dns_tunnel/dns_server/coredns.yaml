@@ -18,4 +18,4 @@ artifacts_to_collect:
   - type: files
     val: ["/tmp/coredns.log", "/tmp/filebeat.json*", "/tmp/dns.pcap"]
   - type: filebeat
-    val: ["/tmp/coredns.json"]
+    val: ["/tmp/coredns.log"]
