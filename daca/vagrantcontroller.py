@@ -115,9 +115,9 @@ class VagrantController(Vagrant, Controller):
         if response.lower() in ['yes', 'y']:
             click.echo(f"[!] Exiting scenario execution.")
             click.echo(f"[!] Collecting data. Please wait while scenario is being softly shut-down.")
-            self.vagrant.halt()
+            #self.vagrant.halt()
             exit_event.set()
-            exit()
+            #exit()
     
     def print_interactive_mode_instructions(self, config: dict, scenario_dir: Path,):
         click.echo(f"\t[+] To interact within the scenario please execute the following in a separate shell:")

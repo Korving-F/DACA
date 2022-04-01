@@ -7,13 +7,12 @@ dns_attack_server:
     setup:
         type: shell
         val: >-
-          apt install ruby ruby-dev;
+          sudo apt install -y ruby ruby-dev asciinema libtext-lorem-perl;
           git clone https://github.com/iagox86/dnscat2.git;
           cd dnscat2/server/;
-          gem install bundler;
-          bundle install;
-          apt-get install -y libtext-lorem-perl;
-          lorem -p 10000 > /tmp/test-file;
+          sudo gem install bundler;
+          sudo bundle install;
+          sudo lorem -p 1000 > /root/test-file;
     run:
         type: shell
         val: >-
@@ -47,6 +46,7 @@ dns_attack_client:
     setup:
       type: shell
       val: >-
+        sudo apt-get install -y asciinema;
         git clone https://github.com/iagox86/dnscat2.git;
         cd dnscat2/client/;
         make;
