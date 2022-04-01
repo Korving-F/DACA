@@ -177,5 +177,5 @@ python -m pytest
 ```
 
 ## License
-DACA is licensed under the [MIT](#) license.  
-Copyright &copy; 2022, Frank Korving
+> DACA is licensed under the [MIT](#) license.  
+> Copyright &copy; 2022, Frank Korving
