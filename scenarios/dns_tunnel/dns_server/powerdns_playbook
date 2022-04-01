@@ -14,10 +14,8 @@
     vars:
       pdns_rec_config:
         local-address: "192.168.0.10:53"
-        forward-zones:
-          - "example.attack=192.168.0.20:53"
         forward-zones-recurse:
-          - ".=8.8.8.8"
+          - "example.attack=192.168.0.20:53"
         trace: "yes"
         loglevel: 5
         logging-facility: 0
