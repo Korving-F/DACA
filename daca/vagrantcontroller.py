@@ -211,5 +211,6 @@ class VagrantController(Vagrant, Controller):
         if interactive:
             while not exit_event.is_set():
                 exit_event.wait(60)
+            exit_event.clear()
 
         self.vagrant.halt()
