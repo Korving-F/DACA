@@ -45,14 +45,12 @@ If you want to make use of the [![Apache Kafka](https://img.shields.io/static/v1
 
 ## Usage
 ```bash
-pipenv shell                        # Enter virtualenv
-python3 daca.py --help              # Show supported commands
-python3 daca.py info --list         # List available scenarios
-python3 daca.py run -d data/ --id 2 # Run scenario 2 and store collected data in ./data/ directory
-python3 daca.py run -d data/ \      # Run scenario 2 interactively instead of in automated mode
-               --id 2 --interactive # 
-python3 daca.py --debug run \       # Run the scenaio in debug mode.
-                    -d data/ --id 2 #
+pipenv shell                                       # Enter virtualenv
+python3 daca.py --help                             # Show supported commands
+python3 daca.py info --list                        # List available scenarios
+python3 daca.py run -d data/ --id 2                # Run scenario 2 and store collected data in ./data/ directory
+python3 daca.py run -d data/ --id 2 --interactive  # Run scenario 2 interactively instead of in automated mode
+python3 daca.py --debug run -d data/ --id 2        # Run the scenaio in debug mode.
 ```
 ![](data/simple_example_scenario/runthrough.gif)
 
@@ -156,8 +154,6 @@ scenarios/
 
 ## Data Sets
 1. [DNS Tunnelling Dataset](https://github.com/Korving-F/dns-tunnel-dataset) - Investigates multiple popular DNS servers and publicly available DNS Tunnel utilities.
-2. 
-3. 
 
 ## Future Development
 1. Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.  
