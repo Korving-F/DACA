@@ -1,3 +1,8 @@
+'''
+NB! Docker is not currently supported.
+This is a placeholder class for possible future inclusion. 
+'''
+
 ### System modules ###
 import shutil
 import subprocess
