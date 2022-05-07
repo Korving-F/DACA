@@ -6,37 +6,24 @@ C2 and File transfer
 
 
 ## Overview
-```
-doh/                        # Main scenario directory
-```
-
-
-```bash
-# Install GO
-curl -OL https://golang.org/dl/go1.16.7.linux-amd64.tar.gz
-sudo tar -C /usr/local -xvf go1.16.7.linux-amd64.tar.gz
-#sudo nano ~/.profile
-# NB LINE IN FILE / environment
-export PATH=$PATH:/usr/local/go/bin
-#source ~/.profile
-go version
-mkdir ~/gopath
-export GOPATH=~/gopath
-
-
-git clone https://github.com/m13253/dns-over-https.git
-cd dns-over-https/
-make
-sudo make install
-sudo systemctl stop systemd-resolved
-sudo systemctl start doh-client.service
-sudo systemctl status doh-client.service
-
-sudo systemctl status doh-client.service
-dig www.google.com
-
-
-# Configfile
-/etc/dns-over-https/doh-client.conf
-/etc/dns-over-https/doh-server.conf
+```       
+scenarios/doh_tunnel/               # Main scenario directory
+├── dns_server                      # Recursive / forwarding DoH-servers
+│   ├── dns-over-https.bash
+│   └── dns-over-https.yaml
+├── dns_tunnel
+│   ├── dns2tcp_client_setup.bash
+│   ├── dns2tcp_server_setup
+│   ├── dns2tcp.yaml
+│   ├── dnscat2_client.bash
+│   ├── dnscat2_server.bash
+│   ├── dnscat2.yaml.disabled
+│   ├── dnstt_client_setup.bash
+│   ├── dnstt_server_setup.bash
+│   ├── dnstt.yaml
+│   ├── iodine_client_setup.bash
+│   ├── iodine_server_setup
+│   └── iodine.yaml
+├── doh_tunnel.yaml
+└── README.md
 ```

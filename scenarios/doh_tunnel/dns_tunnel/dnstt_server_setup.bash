@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "[+] Installing DNSTT-server for DoH tunneling"
 # Install Scenario dependencies
+sudo apt update
 sudo apt-get install -y libtext-lorem-perl asciinema socat
 
 # Setup test file

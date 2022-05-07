@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "[+] Installing Dnscat2 client and scenario dependencies"
+sudo apt update
 sudo apt-get install -y asciinema
 git clone https://github.com/iagox86/dnscat2.git
 cd dnscat2/client/

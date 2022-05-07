@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "[+] Installing DoH-client for transparent UDP to DoH conversion"
 # Install Scenario dependencies
+sudo apt update
 sudo apt-get install -y sshpass asciinema
 
 # Install GO

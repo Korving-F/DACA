@@ -1,4 +1,8 @@
 #!/bin/bash
+sudo apt update
+echo "[+] Install ansible"
+sudo apt -y install ansible
+
 echo "[+] Installing NGINX as proxy"
 sudo add-apt-repository ppa:ondrej/nginx -y
 sudo apt -y install nginx-full

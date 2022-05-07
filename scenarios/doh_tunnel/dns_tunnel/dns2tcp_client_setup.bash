@@ -1,4 +1,6 @@
 #!/bin/bash
+sudo apt update
+
 echo "[+] Installing DNS2TCP client and scenario dependencies"
 sudo apt-get install -y dns2tcp sshpass asciinema;
 
