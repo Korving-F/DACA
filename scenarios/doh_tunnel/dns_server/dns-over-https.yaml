@@ -12,6 +12,7 @@ setup:
 run:
   type: shell
   val: >-
+    sudo systemctl stop systemd-resolved;
     sudo systemctl restart doh-server.service;
     sudo systemctl restart nginx.service; 
 

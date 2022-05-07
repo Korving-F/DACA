@@ -26,10 +26,10 @@ sudo systemctl disable systemd-resolved
 sudo systemctl stop systemd-resolved
 
 echo "[+] Prepare SSHD configuration"
-sed -i 's/#?PermitRootLogin\s+.*/PermitRootLogin yes/g'             /etc/ssh/sshd_config
+sed -i 's/#*PermitRootLogin.*/PermitRootLogin yes/g'             /etc/ssh/sshd_config
 sed -i 's/^UsePAM yes/#UsePAM yes/g'                                /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'   /etc/ssh/sshd_config
 systemctl restart sshd
 
 echo "[+] Change root password"
-echo "root:root" | chpasswd
+sudo echo "root:root" | chpasswd
