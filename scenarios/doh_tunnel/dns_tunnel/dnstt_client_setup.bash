@@ -2,7 +2,7 @@
 echo "[+] Installing DoH-client for transparent UDP to DoH conversion"
 # Install Scenario dependencies
 sudo apt update
-sudo apt-get install -y sshpass asciinema
+sudo apt-get install -y sshpass asciinema socat
 
 # Install GO
 curl -OL https://golang.org/dl/go1.16.7.linux-amd64.tar.gz
