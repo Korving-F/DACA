@@ -156,6 +156,7 @@ scenarios/
 
 ## Data Sets
 1. [DNS Tunnelling Dataset](https://github.com/Korving-F/dns-tunnel-dataset) - Investigates multiple popular DNS servers and publicly available DNS Tunnel utilities.
+2. [DNS Tunnelling over DoH Dataset](https://github.com/Korving-F/doh-tunnel-dataset) - Expands on the first data set by investigating utilities that can tunnel using DNS-over-HTTPS.
 
 ## Future Development
 1. Many scenarios lend themselves to also be run on Docker (faster than current VM-based approach) while new scenarios could also be written for the cloud through Terraform (AWS, Google, Azure) which would allow generation/collection of cloud-native datasets.  
