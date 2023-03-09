@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-blue)](https://en.wikipedia.org/wiki/MIT_License)
 [![Pipenv](https://img.shields.io/github/pipenv/locked/python-version/Korving-F/DACA)](https://github.com/pypa/pipenv)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Korving-F/daca)](https://github.com/Korving-F/DACA)
-
+[![ICCWS Paper](https://img.shields.io/badge/DOI-10.34190%2Ficcws.18.1.962-blue)](https://doi.org/10.34190/iccws.18.1.962)
 
 ## Table of Contents
 * [Overview](#overview)
